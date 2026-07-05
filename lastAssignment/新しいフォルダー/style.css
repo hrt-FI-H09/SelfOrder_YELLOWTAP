@@ -1,0 +1,879 @@
+/* 全体リセットと基本スタイル */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+  
+  /* 画面の中心を基準に全体を0.66倍（66%）にする */
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* レイアウトコンテナ */
+.order-container {
+  display: flex;
+  flex-direction: row;
+  
+  /* 本来の100%サイズを計算上の基準にする */
+  width: calc(100vw / 0.66);  /* 約151.5vw */
+  height: calc(100vh / 0.66); /* 約151.5vh */
+  
+  /* 0.66倍に縮小して画面内にぴったり収める */
+  transform: scale(0.66);
+  transform-origin: center center;
+  
+  background: #ffffff;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+/* タブバー */
+/* タブバー全体：均等配置に設定 */
+.tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ★左詰めから中央寄せに変更 */
+  height: auto; 
+  min-height: 120px; 
+  background: #F7F7F7;
+  padding: 0 40px;
+  gap: 60px; /* ★ここの数値を変更します（現在は30px） */
+  border-bottom: 1px solid #e0e0e0;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-bottom: 0 !important;
+  margin-top: 0px !important;
+  padding-top: 30px !important;
+}
+
+.tab-nav {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  gap: 15px;
+}
+
+/* タブボタン基本 */
+.tab-btn-beer .beer-img {
+  display: none;
+}
+
+/* アクティブ状態のビールタブ */
+.tab-btn-beer.active {
+  position: relative;
+  background: none !important; /* グラデーション背景を消去 */
+  width: 140px;    /* 通常ボタンと横幅を統一 */
+  height: 120px;   /* 通常ボタンと高さを統一して下端を揃える */
+  font-size: 2rem;
+  overflow: visible;         /* 縦に長い画像が上に飛び出るようにする */
+  display: flex;
+  justify-content: center;   /* 文字を横方向で中央揃え */
+  align-items: flex-end;     /* 文字を下側に寄せて画像と位置を合わせる（必要に応じてcenterに） */
+  padding-bottom: 20px;      /* 文字が下すぎて見切れないための余白調整 */
+}
+
+/* TOPボタン：正方形に修正（縦横を136pxに統一） */
+.tab-btn-top {
+  width: 100px; /* 横幅を固定 */
+  aspect-ratio: 1 / 1; /* 正方形を維持 */
+  border-radius: 6px;
+  background: linear-gradient(180deg, #F3F3F3 73.08%, #D3D3D3 100%);
+  font-size: 1.8rem; 
+      font-family: 'Bebas Neue', sans-serif;
+
+  color: #505050;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 1; /* 画面幅に合わせて縮小を許可 */
+}
+
+
+.tab-btn-top .tab-icon {
+  width: 36px;
+  height: auto;
+  margin-bottom: 2px;
+}
+
+/* アクティブ状態のビールタブ */
+.tab-btn-beer.active {
+  position: relative;
+  background: none !important; /* グラデーション背景を消去 */
+  width: 140px;    /* 横幅をボタンのサイズに固定 */
+  height: 100%;   /* タブバーの高さ100%に合わせる */
+  font-size: 2rem;
+  overflow: visible;         /* 縦に長い画像（泡部分）が上に飛び出るようにする */
+display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;     /* ズレの原因になるパディングをクリア */
+}
+/* 統合された新しい画像（active-tab-btn）の配置 */
+.tab-btn-beer.active .beer-img {
+  display: block;
+  position: absolute;
+  bottom: 0;                 /* 下揃えにする */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130% !important;    /* 横幅をボタンと同じ（140px）にする */
+  height: auto !important;   /* アスペクト比を保ったまま縦幅を自動補正 */
+  z-index: 1;
+}
+
+.tab-btn-beer.active .beer-text {
+  position: relative;
+  z-index: 3;
+  color: #FFF;
+  font-size: 2.4rem;           /* 他のボタンのフォントサイズ（2rem）と統一 */
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1px;       /* 他のボタンと統一 */
+  margin-left: 15px ;      /* 余計なマージンを完全に排除 */
+  line-height: 1;            /* 行高によるズレを防ぐ */
+}
+/* ビール以外の通常タブボタン（Main, Snacksなど）に active がついた時 */
+header.tab-bar button.tab-btn.active:not(.tab-btn-beer) {
+  position: relative;
+  /* 元のグレーのグラデーション背景を完全にクリア */
+  background: none !important; 
+  background-color: transparent !important;
+  
+  /* ボタン自体のサイズは他と完全に固定して揃える */
+  width: 140px !important;    
+  height: 120px !important;   
+  font-size: 2rem;
+  /* ★ビールと同様、120%に拡大して上に飛び出せるようにする */
+  overflow: visible !important; 
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+  
+  /* タブの重なり順を前面にする */
+  z-index: 10;
+}
+
+/* 通常タブのアクティブ背景画像を、ビール画像と同じ方法で下揃え・120%拡大する */
+header.tab-bar button.tab-btn.active:not(.tab-btn-beer)::before {
+  content: '';
+  position: absolute;
+  bottom: 0;                 /* ビールと同じく下揃え */
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* ★上手くいっているビールと同じサイズ指定（120%） */
+  width: 120% !important;    
+  height: calc(120% * 1.2) !important; /* 横幅120%に対してアスペクト比を保つ、または 100% や auto に調整 */
+  
+  /* 画像の設定 */
+  background-image: url('./lastAssignment/tab-btn-Active.png') !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: bottom center !important;
+  
+  /* 文字（z-index: 3）の後ろ、ボタンの背景として配置 */
+  z-index: 1; 
+}
+
+header.tab-bar button.tab-btn.active:not(.tab-btn-beer) span {
+  margin-left: 15px !important; /* 余計なマージンを完全に排除 */
+  position: relative !important;
+  z-index: 5 !important; /* 背景画像（z-index: 1）よりも上の数値にする */
+  color: #FFF !important;
+}
+
+/* 通常タブの文字が画像の上に正しく乗るようにガード */
+header.tab-bar button.tab-btn.active:not(.tab-btn-beer) span,
+header.tab-bar button.tab-btn.active:not(.tab-btn-beer) {
+  color: #FFF !important;
+  /* ボタンの中身のテキスト自体の重なりを画像より前にする */
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+
+/* メインコンテンツエリア */
+.main-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #FFF3D4;
+  height: 100%;
+  
+  /* 【重要】ここが absolute などの影響を受けないように、
+     親としての基準位置（relative）を明確にしておきます */
+  position: relative; 
+  overflow: hidden; 
+}
+
+/* メニューグリッドラッパー（スクロールを外側から強制する器） */
+.menu-grid-wrapper {
+  position: absolute;
+  top: 150px;    /* タブバーの min-height（160px）の下端からスタートさせる */
+  bottom: 0;     /* 画面の一番下まで引き伸ばす */
+  left: 0;
+  right: 0;
+  
+  padding: 53px; 
+  
+  /* 【最重要】スクロールを絶対に殺さないための強制設定 */
+  overflow-y: scroll !important; 
+  -webkit-overflow-scrolling: touch;
+}
+
+/* メニューグリッド（中身のカードたちの並び） */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: auto; /* autoに変更してコンテンツに合わせて自動で縦に伸びるようにする */
+  gap: 53px; 
+  width: 100%;
+  
+  /* 【解決の鍵】縮小による計算ズレを完全に吸収するため、
+     最下部にカード1枚分以上の圧倒的な余裕（底上げ）を作ります */
+  padding-bottom: 100px !important; 
+  
+  /* 高さが親に縛られて縮まないように auto に固定 */
+  height: auto !important; 
+}
+
+/* メニューカード（横幅はグリッドに合わせて自動縮小されます） */
+.menu-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  background: #FFFFF2;
+  box-shadow: 6px 6px 4px 0 rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.card-img-wrapper {
+  width: 100%;
+  height: auto;
+  background: #ccc; 
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* card-footerからcontent-footerに修正し、指定のパディングとサイズを設定 */
+.content-footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 36px; /* 上下24px、左右36px */
+  background: #FFFFF2;
+  width: 100%;
+  height: auto; /* 高さをautoに変更 */
+  gap: 0px; /* テキストとボタンの間の余白（必要に応じて調整してください） */
+}
+
+/* コンテンツ間隔とサイズを設定 */
+.text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0px; /* コンテンツ間隔を5pxに設定 */
+  width: 100%;
+  height: auto;
+}
+
+.product-name {
+  font-size: 36px;
+  font-weight: 1000;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.price-box {
+  display: flex;
+  align-items: flex-end; /* 下側のラインに揃える */
+  gap: 4px;
+  width: 100%; /* 横幅いっぱいに広げて左寄せを確実にする */
+}
+
+.price {
+  font-family: 'Yu Mincho', serif;
+  font-size: 32px;
+  font-weight: 400;
+}
+
+.tax {
+  font-family: 'Yu Mincho', serif;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 新設：ボタンの外枠フレーム（幅100%・高さauto） */
+.frame-order-button {
+  display: flex;
+  justify-content: flex-end; /* ボタンを右寄せにする場合（中央ならcenter） */
+  width: 100%;
+  height: auto;
+}
+
+/* 新設：180*40固定、パディング上下6px・左右12pxのボタン */
+.order-button {
+  width: 200px; /* 200px固定 */
+  height: 50px; /* 50px固定 */
+  padding: 6px 6px; /* 上下6px、左右12px */
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #F07F01 31.73%, #F05600 100%);
+  color: #FFF;
+  font-size: 1.2rem;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* ==========================================
+   左右矢印ボタンの共通スタイル
+   ========================================== */
+.nav-next-btn,
+.nav-before-btn {
+  position: fixed; 
+  top: 50%;        
+  transform: translateY(-50%); 
+  
+  width: 66px; 
+  height: 66px; 
+  background: rgba(255, 255, 255, 0.5); 
+  border: none;
+  border-radius: 50%; 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100; 
+}
+
+/* 右矢印ボタンの位置（右サイドバー300px ＋ 余白20px） */
+.nav-next-btn {
+  right: 320px;
+}
+
+/* 左矢印ボタンの位置（画面の左端から20px） */
+.nav-before-btn {
+  left: 20px;
+  display: none; /* 初期状態では非表示 */
+}
+
+/* 矢印の線パーツ（左右すべてのbefore/after共通） */
+.nav-next-btn::before,
+.nav-next-btn::after,
+.nav-before-btn::before,
+.nav-before-btn::after {
+  content: '';
+  position: absolute;
+  width: 30px; 
+  height: 6px; 
+  background: #7A7A7A; 
+  border: none;
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+/* ホバー時の色の変化 */
+.nav-next-btn:hover::before,
+.nav-next-btn:hover::after,
+.nav-before-btn:hover::before,
+.nav-before-btn:hover::after {
+  background: #333333; 
+}
+
+/* ------------------------------------------
+   右向き矢印（ > ）の形状設定
+   ------------------------------------------ */
+.nav-next-btn::before {
+  transform: rotate(45deg);
+  top: 24px; 
+}
+.nav-next-btn::after {
+  transform: rotate(-45deg);
+  top: 42px; 
+}
+
+/* ------------------------------------------
+   左向き矢印（ < ）の形状設定
+   ------------------------------------------ */
+.nav-before-btn::before {
+  transform: rotate(-45deg);
+  top: 24px; 
+}
+.nav-before-btn::after {
+  transform: rotate(45deg);
+  top: 42px; 
+}
+
+/* 右側サイドバー */
+.sidebar-right {
+  width: 300px;
+  height: 100%;
+  background: #FFBE0B;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 10px;
+  height: 100%;
+  box-shadow: -4px 0 10px rgba(0,0,0,0.05);
+  flex-shrink: 0; /* メインコンテンツに押されて横幅が縮むのを防ぐ */
+}
+
+/* ユーティリティバー群 */
+.utility-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  align-items: center;
+}
+
+.util-btn {
+  /* 1. 横幅：サイドバーいっぱいに広げつつ、最大250pxに制限 */
+  width: 100% !important;
+  max-width: 250px !important;
+  min-width: 0 !important; 
+
+  /* 2. 高さ：高さをautoにし、画像のアスペクト比（縦横比）で自動決定させる */
+  height: auto !important;
+  aspect-ratio: 251 / 77 !important; 
+
+  /* 3. 背景画像の設定 */
+  background-size: 100% 100% !important; 
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  
+  /* 【左に20pxずらす調整】 
+     右マージンを削り、マイナスマージンでボタン全体を左にグッと引っ張ります */
+  margin-right: 0 !important;
+
+  /* 4. レイアウト調整：文字を画像の中央にビシッと揃える */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 !important; /* 古い左パディングなどを完全にクリアして上下左右を均等に */
+  border: none !important;
+  background-color: transparent !important;
+  position: relative !important;
+  cursor: pointer;
+}
+
+.util-label {
+  /* 【文字の上下中央揃え】
+     line-heightを1にし、余計なマージンを消すことで、ボタン（画像）の垂直中心に文字を固定します */
+  line-height: 1 !important;
+  margin: 0 !important;
+  display: inline-block !important;
+  color: #FFF !important;
+  font-size: 1.6rem !important;
+  font-weight: 500 !important;
+  margin-right: 40px !important; /* 右側の余白を少しだけ追加して文字が窮屈にならないように調整 */
+  letter-spacing: 1.5px !important;
+}
+
+/* 各種ボタンカラー（ハンドル画像）割り当て */
+.btn-check {
+  background-image: url('./lastAssignment/tapHandle1.png') !important; 
+}
+
+.btn-call {
+  background-image: url('./lastAssignment/tapHandle2.png') !important; 
+  gap: 10px !important;
+  padding-left: 0 !important; /* 中央揃えを崩さないために左パディングを0に修正 */
+}
+
+.btn-call .btn-icon {
+  width: 32px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  display: block !important;
+}
+
+.btn-service {
+  background-image: url('./lastAssignment/tapHandle3.png') !important; 
+}
+
+.btn-history {
+  background-image: url('./lastAssignment/tapHandle3.png') !important; 
+}
+
+.btn-lang {
+  background-image: url('./lastAssignment/tapHandle3.png') !important; 
+}
+
+
+/* カートセクション */
+.cart-section {
+  display: flex;
+  width: 270px;
+  height: 52%;
+  position: relative;
+}
+
+.cart-container {
+  display: flex;
+  flex-direction: column;
+  background: #FFF;
+  border-radius: 24px;
+  padding: 16px;
+  width: 94%;
+  height: 100%; /* サイドバーの高さ（52%）いっぱいに引き伸ばす */
+justify-content: flex-start; /* 上詰めに固定 */
+box-sizing: border-box;
+position: relative;
+}
+
+.cart-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #CC4700;
+  border-bottom: 2px solid #FFF3D4;
+  padding-bottom: 6px;
+}
+
+.cart-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+.cart-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  
+  /* 【最重要】下から何pxの位置にするかの指定 */
+  position: absolute;
+  bottom: 20px; /* ← カート枠の下端から20px浮かせた位置に固定（ここを好きなpxに変えてください） */
+  left: 16px;   /* 左右のパディング（16px）に合わせて位置を固定 */
+  right: 16px;  /* 左右のパディング（16px）に合わせて位置を固定 */
+  }
+.cart-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* カート内アイテムリストスクロールのエリア（立体的なインナードロップを設定） */
+/* カート内アイテムリストスクロールのエリア */
+/* カート内アイテムリストスクロールのエリア（通常時：影なし） */
+.cart-items-scroll {
+  flex: none; 
+  height: 300px; 
+  overflow-y: auto; 
+  margin: 10px 0 0 0; 
+  padding: 10px 14px; 
+  display: flex;
+  flex-direction: column;
+  gap: 12px; 
+  background: #FFF; 
+  border-radius: 12px;
+  
+  /* 最初はインナーシャドウを付けない */
+  box-shadow: none; 
+  transition: box-shadow 0.2s ease; /* 影が出現するときにじわっと動かす演出 */
+}
+
+/* 【重要】4種類以上追加されたときだけ、下側にインナーシャドウを出現させる */
+.cart-items-scroll.has-shadow {
+  box-shadow: inset 0 -15px 12px -5px rgba(0, 0, 0, 0.35); 
+}
+/* カート内アイテムの1行のスタイル */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #Eaeaea;
+  padding-bottom: 8px;
+  height: 50px; /* 高さを固定して見切れ具合を均一にする */
+  flex-shrink: 0; /* スクロール時に潰れないように固定 */
+}
+
+/* 商品名（フォントサイズを24pxに拡大） */
+.item-name {
+  font-size: 24px; /* ← ご指定の24px */
+  color: #505050;
+  font-weight: 500;
+  /* 横幅に余裕を持たせ、溢れたら自動で省略する設定 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px; 
+}
+
+/* 数量コントロール（Stepper全体） */
+.quantity-control {
+  display: flex;
+  align-items: center;
+  border: 1px solid #7A7A7A;
+  border-radius: 6px;
+  height: 40px; /* 押しやすいように少し大きく */
+  background: #fff;
+  overflow: hidden;
+}
+
+/* Stepperのプラス・マイナスボタン（フォントサイズを24pxに拡大） */
+.qty-btn {
+  width: 36px;
+  height: 100%;
+  background: #F0F0F0;
+  border: none;
+  cursor: pointer;
+  font-size: 24px; /* ← ご指定の24px */
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.qty-btn:hover {
+  background: #E0E0E0;
+}
+
+/* マイナスボタンのテキスト位置の微調整（既存のズレを解消） */
+.btn-minus {
+display: block !important; /* flexを解除 */
+  line-height: 24px !important; /* ボタンの高さ（40px）より少し大きめの数値を指定すると、その分文字が下に下がります */
+  text-align: center;
+}
+
+/* Stepperの中央の数値（フォントサイズを24pxに拡大） */
+.qty-text {
+  width: 44px;
+  text-align: center;
+  font-size: 24px; /* ← ご指定の24px */
+  font-weight: 500;
+  border-left: 1px solid #7A7A7A;
+  border-right: 1px solid #7A7A7A;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+/* --- スクロールバーのカスタムデザイン（連動して動く設定） --- */
+.cart-items-scroll::-webkit-scrollbar {
+  width: 6px; 
+}
+.cart-items-scroll::-webkit-scrollbar-track {
+  background: transparent; /* インナードロップの邪魔をしないように透明に */
+  margin: 8px 0;
+}
+.cart-items-scroll::-webkit-scrollbar-thumb {
+  background: #9D9D9D;
+  border-radius: 5px;
+}
+
+
+.item-name {
+  font-size: 0.95rem;
+  color: #505050;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+/* 数量コントロール */
+.quantity-control {
+  display: flex;
+  align-items: center;
+  border: 0.5px solid #000;
+  border-radius: 3px;
+  height: 24px;
+  background: rgba(199, 199, 199, 0.1);
+}
+
+.qty-btn {
+  width: 20px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Yu Mincho', serif;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-minus {
+  line-height: 0;
+  padding-bottom: 8px;
+}
+
+.qty-text {
+  width: 24px;
+  text-align: center;
+  font-family: 'Yu Mincho', serif;
+  font-size: 14px;
+  border-left: 0.5px solid #000;
+  border-right: 0.5px solid #000;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+/* 確定ボタン自体の高さも少し調整 */
+.confirm-order-btn {
+  width: 100%;
+  height: 44px; /* 48pxから44pxに少しだけ小さくして枠内に収めやすく */
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #F07F01 31.73%, #F05600 100%);
+  color: #FFF;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.total-amount {
+  color: #CC4700;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* カート横のスクロールバー表現 */
+.cart-scrollbar {
+  position: absolute;
+  right: 0;
+  top: 25%;
+  width: 6px;
+  height: 40%;
+  background: #9D9D9D;
+  opacity: 0.73;
+  border-radius: 5px;
+}
+
+
+
+
+/* 新設：タブボタンを囲むフレーム */
+.tab-section-button {
+  display: flex;
+  align-items: center;
+  width: max-content;  /* 横幅はコンテンツを内包 */
+  height: max-content; /* 縦幅はコンテンツを内包 */
+  gap: 96px;           /* ボタン間の間隔を96pxに設定 */
+}
+
+/* 全タブボタン共通の固定サイズ設定 */
+.tab-btn {
+  width: 120px !important;  /* 横幅122px固定 */
+  height: 120px !important; /* 縦幅136px固定 */
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  letter-spacing: 1px;
+  color: #33363F;
+  background: linear-gradient(180deg, #E3F0F4 50.48%, #AAB6BA 100%);
+  transition: all 0.2s ease;
+  flex-shrink: 0; /* 横スクロール時にボタンが潰れないように設定 */
+}
+
+
+
+.tab-btn-beer .beer-img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+  z-index: 1;
+}
+
+
+/* モーダル全体の暗転背景 */
+.modal-overlay {
+  display: none; /* 初期状態は非表示 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* 画面を少し暗くする（不透明度60%） */
+  z-index: 2000; /* 全ての要素の一番手前に持ってくる */
+  justify-content: center;
+  align-items: center;
+}
+
+/* 中央の正方形カード */
+.modal-card {
+  background: #FFF;
+  width: 450px;       /* 画面サイズに合わせて扱いやすい正方形の幅 */
+  height: 450px;      /* 縦横を同じにして正方形に固定 */
+  border-radius: 16px;
+  position: relative;
+  padding: 30px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  animation: modalFadeIn 0.3s ease; /* 開くときのスムーズな演出 */
+}
+
+/* 閉じるボタン（右上） */
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: #7A7A7A;
+  cursor: pointer;
+}
+
+.modal-close-btn:hover {
+  color: #333;
+}
+
+/* モーダルがふわっと出るアニメーション */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -1,0 +1,929 @@
+/* ==========================================================================
+   1. 全体リセット & 基本スタイル
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* ==========================================================================
+   2. レイアウトコンテナ（画面縮小設定）
+   ========================================================================== */
+
+.order-container {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #ffffff;
+  
+  /* 0.66倍縮小を見越したベースサイズ計算 */
+  width: calc(100vw / 0.66);  /* 約151.5vw */
+  height: calc(100vh / 0.66); /* 約151.5vh */
+  
+  /* 全体を中央基準で0.66倍に縮小 */
+  transform: scale(0.66);
+  transform-origin: center center;
+}
+
+
+/* ==========================================================================
+   3. ヘッダー・タブバー
+   ========================================================================== */
+
+/* タブバー全体 */
+header.tab-bar,
+.tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto; 
+  min-height: 120px; 
+  background: #F7F7F7;
+  padding: 0 40px;
+  padding-top: 30px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0 !important;
+  gap: 60px;
+  border-bottom: 1px solid #e0e0e0;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+/* タブナビゲーションエリア */
+.tab-nav {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  gap: 15px;
+}
+
+/* タブボタンを囲むフレーム */
+.tab-section-button {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  height: max-content;
+  gap: 96px;
+}
+
+/* 全タブボタン共通スタイル */
+.tab-btn {
+  width: 120px !important;
+  height: 120px !important;
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #33363F;
+  background: linear-gradient(180deg, #E3F0F4 50.48%, #AAB6BA 100%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+}
+
+/* TOPタブボタン（正方形スタイル） */
+.tab-btn-top {
+  width: 100px;
+  aspect-ratio: 1 / 1;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 1;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #F3F3F3 73.08%, #D3D3D3 100%);
+  color: #505050;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem; 
+  cursor: pointer;
+}
+
+.tab-btn-top .tab-icon {
+  width: 36px;
+  height: auto;
+  margin-bottom: 2px;
+}
+
+/* --- ビールタブ専用スタイル --- */
+
+.tab-btn-beer .beer-img {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+  z-index: 1;
+}
+
+/* ビールタブ：アクティブ時 */
+.tab-btn-beer.active {
+  position: relative;
+  width: 140px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+  background: none !important;
+  font-size: 2rem;
+  overflow: visible;
+}
+
+.tab-btn-beer.active .beer-img {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130% !important;
+  height: auto !important;
+  z-index: 1;
+}
+
+.tab-btn-beer.active .beer-text {
+  position: relative;
+  margin-left: 15px;
+  line-height: 1;
+  color: #FFF;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  letter-spacing: 1px;
+  z-index: 3;
+}
+
+/* --- 通常タブ（Main, Snacks等）：アクティブ時 --- */
+
+header.tab-bar button.tab-btn.active:not(.tab-btn-beer) {
+  position: relative;
+  width: 140px !important;    
+  height: 120px !important;   
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+  background: none !important; 
+  background-color: transparent !important;
+  font-size: 2rem;
+  overflow: visible !important; 
+  z-index: 10;
+  color: #FFF !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* 通常タブアクティブ時の背景疑似要素 */
+header.tab-bar button.tab-btn.active:not(.tab-btn-beer)::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120% !important;    
+  height: calc(120% * 1.2) !important;
+  background-image: url('./lastAssignment/tab-btn-Active.png') !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: bottom center !important;
+  z-index: 1; 
+}
+
+header.tab-bar button.tab-btn.active:not(.tab-btn-beer) span {
+  position: relative !important;
+  margin-left: 15px !important;
+  color: #FFF !important;
+  z-index: 5 !important;
+}
+
+
+/* ==========================================================================
+   4. メインコンテンツ & メニューグリッド
+   ========================================================================== */
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #FFF3D4;
+  height: 100%;
+  position: relative; 
+  overflow: hidden; 
+}
+
+/* スクロール用外殻ラッパー */
+.menu-grid-wrapper {
+  position: absolute;
+  top: 150px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 53px; 
+  overflow-y: scroll !important; 
+  -webkit-overflow-scrolling: touch;
+}
+
+/* メニューカード配置グリッド */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: auto;
+  gap: 53px; 
+  width: 100%;
+  height: auto !important; 
+  padding-bottom: 100px !important; /* 計算ズレによる見切れ防止の底上げ余白 */
+}
+
+
+/* ==========================================================================
+   5. メニュー商品カード
+   ========================================================================== */
+
+.menu-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  background: #FFFFF2;
+  box-shadow: 6px 6px 4px 0 rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+/* 商品画像エリア */
+.card-img-wrapper {
+  width: 100%;
+  height: auto;
+  background: #ccc; 
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* カード下部テキスト・ボタンエリア */
+.content-footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: auto;
+  padding: 24px 36px;
+  background: #FFFFF2;
+  gap: 0px;
+}
+
+/* 商品名・価格グループ */
+.text-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  gap: 0px;
+}
+
+.product-name {
+  font-size: 36px;
+  font-weight: 1000;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.price-box {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.price {
+  font-family: 'Yu Mincho', serif;
+  font-size: 32px;
+  font-weight: 400;
+  margin-right: 4px;
+}
+
+.tax {
+  font-family: 'Yu Mincho', serif;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 注文ボタン枠・ボタン本体 */
+.frame-order-button {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  height: auto;
+}
+
+.order-button {
+  width: 200px;
+  height: 50px;
+  padding: 6px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #F07F01 31.73%, #F05600 100%);
+  color: #FFF;
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+
+/* ==========================================================================
+   6. ページ移動 左右矢印ナビゲーション
+   ========================================================================== */
+
+.nav-next-btn,
+.nav-before-btn {
+  position: fixed; 
+  top: 50%;        
+  transform: translateY(-50%); 
+  width: 66px; 
+  height: 66px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5); 
+  border: none;
+  border-radius: 50%; 
+  z-index: 100; 
+  cursor: pointer;
+}
+
+.nav-next-btn {
+  right: 320px;
+}
+
+.nav-before-btn {
+  left: 20px;
+  display: none;
+}
+
+/* 矢印アイコン生成用（擬似要素パーツ） */
+.nav-next-btn::before,
+.nav-next-btn::after,
+.nav-before-btn::before,
+.nav-before-btn::after {
+  content: '';
+  position: absolute;
+  width: 30px; 
+  height: 6px; 
+  background: #7A7A7A; 
+  border: none;
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.nav-next-btn:hover::before,
+.nav-next-btn:hover::after,
+.nav-before-btn:hover::before,
+.nav-before-btn:hover::after {
+  background: #333333; 
+}
+
+/* 右向き矢印 ( > ) 形状設定 */
+.nav-next-btn::before {
+  transform: rotate(45deg);
+  top: 24px; 
+}
+.nav-next-btn::after {
+  transform: rotate(-45deg);
+  top: 42px; 
+}
+
+/* 左向き矢印 ( < ) 形状設定 */
+.nav-before-btn::before {
+  transform: rotate(-45deg);
+  top: 24px; 
+}
+.nav-before-btn::after {
+  transform: rotate(45deg);
+  top: 42px; 
+}
+
+
+/* ==========================================================================
+   7. 右側サイドバー & ユーティリティ
+   ========================================================================== */
+
+.sidebar-right {
+  width: 300px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 10px;
+  background: #FFBE0B;
+  box-shadow: -4px 0 10px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+
+.utility-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  align-items: center;
+}
+
+/* ユーティリティ共通ボタン（タップハンドル画像ベース） */
+.util-btn {
+  width: 100% !important;
+  max-width: 250px !important;
+  min-width: 0 !important; 
+  height: auto !important;
+  aspect-ratio: 251 / 77 !important; 
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 !important;
+  margin-right: 0 !important;
+  border: none !important;
+  background-color: transparent !important;
+  background-size: 100% 100% !important; 
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  position: relative !important;
+  cursor: pointer;
+}
+
+.util-label {
+  display: inline-block !important;
+  margin: 0 !important;
+  margin-right: 40px !important;
+  line-height: 1 !important;
+  color: #FFF !important;
+  font-size: 1.6rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* ハンドル背景画像割り当て */
+.btn-check    { background-image: url('./lastAssignment/tapHandle1.png') !important; }
+.btn-service  { background-image: url('./lastAssignment/tapHandle3.png') !important; }
+.btn-history  { background-image: url('./lastAssignment/tapHandle3.png') !important; }
+.btn-lang     { background-image: url('./lastAssignment/tapHandle3.png') !important; }
+
+.btn-call {
+  background-image: url('./lastAssignment/tapHandle2.png') !important; 
+  gap: 10px !important;
+  padding-left: 0 !important;
+}
+.btn-call .btn-icon {
+  width: 32px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  display: block !important;
+}
+
+
+/* ==========================================================================
+   8. カートセクション
+   ========================================================================== */
+
+.cart-section {
+  display: flex;
+  width: 270px;
+  height: 52%;
+  position: relative;
+}
+
+.cart-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 94%;
+  height: 100%;
+  padding: 16px;
+  background: #FFF;
+  border-radius: 24px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.cart-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #CC4700;
+  border-bottom: 2px solid #FFF3D4;
+  padding-bottom: 6px;
+}
+
+.cart-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.cart-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* カート下部固定エリア */
+.cart-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  position: absolute;
+  bottom: 20px;
+  left: 16px;
+  right: 16px;
+}
+
+.total-amount {
+  color: #CC4700;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.confirm-order-btn {
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #F07F01 31.73%, #F05600 100%);
+  color: #FFF;
+  font-size: 1.2rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.cart-scrollbar {
+  position: absolute;
+  right: 0;
+  top: 25%;
+  width: 6px;
+  height: 40%;
+  background: #9D9D9D;
+  opacity: 0.73;
+  border-radius: 5px;
+}
+
+/* --- カート内商品リストスクロールエリア --- */
+
+.cart-items-scroll {
+  flex: none; 
+  height: 300px; 
+  display: flex;
+  flex-direction: column;
+  gap: 12px; 
+  margin: 10px 0 0 0; 
+  padding: 10px 14px; 
+  background: #FFF; 
+  border-radius: 12px;
+  box-shadow: none; 
+  transition: box-shadow 0.2s ease;
+  overflow-y: auto; 
+}
+
+/* 商品が一定数以上で下部に影を出すクラス */
+.cart-items-scroll.has-shadow {
+  box-shadow: inset 0 -15px 12px -5px rgba(0, 0, 0, 0.35); 
+}
+
+.cart-items-scroll::-webkit-scrollbar {
+  width: 6px; 
+}
+.cart-items-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 8px 0;
+}
+.cart-items-scroll::-webkit-scrollbar-thumb {
+  background: #9D9D9D;
+  border-radius: 5px;
+}
+
+/* --- カート内商品行 & 数量操作（Stepper） --- */
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #Eaeaea;
+  padding-bottom: 8px;
+}
+
+.item-name {
+  color: #505050;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 重複セクションの統合・サイズ指定調整 */
+.cart-container .item-name {
+  font-size: 24px;
+  max-width: 140px; 
+}
+.cart-section .item-name {
+  font-size: 0.95rem;
+  max-width: 120px;
+}
+
+/* 数量コントロール枠 */
+.cart-container .quantity-control {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  background: #fff;
+  border: 1px solid #7A7A7A;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.cart-section .quantity-control {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  background: rgba(199, 199, 199, 0.1);
+  border: 0.5px solid #000;
+  border-radius: 3px;
+}
+
+/* Stepper ボタン類 */
+.cart-container .qty-btn {
+  width: 36px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F0F0F0;
+  border: none;
+  color: #333;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cart-container .qty-btn:hover {
+  background: #E0E0E0;
+}
+.cart-container .btn-minus {
+  display: block !important;
+  line-height: 24px !important;
+  text-align: center;
+}
+
+.cart-section .qty-btn {
+  width: 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  font-family: 'Yu Mincho', serif;
+  font-size: 12px;
+  cursor: pointer;
+}
+.cart-section .btn-minus {
+  line-height: 0;
+  padding-bottom: 8px;
+}
+
+/* Stepper 中央数値 */
+.cart-container .qty-text {
+  width: 44px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-left: 1px solid #7A7A7A;
+  border-right: 1px solid #7A7A7A;
+  font-size: 24px;
+  font-weight: 500;
+}
+.cart-section .qty-text {
+  width: 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-left: 0.5px solid #000;
+  border-right: 0.5px solid #000;
+  font-family: 'Yu Mincho', serif;
+  font-size: 14px;
+}
+
+
+/* ==========================================================================
+   9. 通常ポップアップモーダル
+   ========================================================================== */
+
+/* モーダル暗転背景 */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+/* モーダルメインカード（正方形） */
+.modal-card {
+  position: relative;
+  width: 450px;       
+  height: 450px;      
+  padding: 30px;
+  background: #FFF;
+  border-radius: 16px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  animation: modalFadeIn 0.3s ease;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: #7A7A7A;
+  cursor: pointer;
+}
+.modal-close-btn:hover {
+  color: #333;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* ==========================================================================
+   10. 特別仕様演出モーダル（Special Presentation）
+   ========================================================================== */
+
+/* 演出用固定暗転背景 */
+.special-presentation-container {
+  display: none; 
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.65); 
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto; 
+  z-index: 2000; 
+}
+
+/* 演出コンテナ（絶対配置同期版） */
+.main-content .special-presentation-container {
+  position: absolute;
+  z-index: 1500;
+}
+
+/* 演出内コンテンツラッパー */
+.special-wrapper {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: visible;
+  pointer-events: none; 
+}
+.main-content .special-wrapper {
+  bottom: 0;
+  height: 843px; 
+}
+body > .special-presentation-container .special-wrapper {
+  height: 603px;
+}
+
+/* 左側固定画像配置エリア */
+.presentation-left-image {
+  position: absolute;
+  bottom: 0;
+  left: 20%; 
+  height: 643px;
+  width: auto; 
+  pointer-events: auto; 
+  animation: clipIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  z-index: 2;
+}
+.presentation-left-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(6px 6px 4px rgba(0, 0, 0, 0.25));
+}
+
+/* 右側テキスト・注文エリア */
+.presentation-right-content {
+  position: absolute;
+  left: calc(20% + 232px); 
+  top: 0; 
+  height: 543px; 
+  width: 0; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;   
+  gap: 30px;                 
+  padding: 40px 50px;        
+  background: #FFFFF2;
+  border-radius: 0 24px 24px 0;
+  box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: auto; 
+  animation: growRightFromCenter 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: 0.3s;
+  z-index: 1;
+}
+
+/* 演出モーダル内ボタン制御 */
+.presentation-right-content .frame-order-button {
+  display: flex;
+  justify-content: flex-end; 
+  width: 100%;
+  margin-top: auto;          
+}
+
+.presentation-right-content .order-button {
+  width: 240px;             
+  height: 55px;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+/* 演出用アニメーションキーフレーム */
+@keyframes clipIn {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes growRightFromCenter {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 650px; 
+    opacity: 1;
+  }
+}
