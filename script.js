@@ -86,28 +86,39 @@ function displayMenus() {
           </div>
         </div>
         <div class="frame-order-button">
-          <button class="order-button" onclick="triggerSpecialAnimation('${product.id}'); event.stopPropagation();">注文リストに入れる</button>
-        </div>
-      </div>
+<button class="order-button" onclick="triggerSpecialAnimation('${product.id}'); event.stopPropagation();">注文リストに入れる</button>      </div>
     `;
     menuGrid.appendChild(card);
   });
 
-  // 左右の矢印ボタンの表示・非表示コントロール
+// 左右の矢印ボタンの表示・非表示コントロール
   const nextBtn = document.querySelector('.nav-next-btn');
   const beforeBtn = document.querySelector('.nav-before-btn');
 
   if (nextBtn && beforeBtn) {
-    if (currentCategory === 'beer') {
-      nextBtn.style.display = 'flex';
-      beforeBtn.style.display = 'none';
-    } else if (currentCategory === 'drink') {
-      nextBtn.style.display = 'none';
-      beforeBtn.style.display = 'flex';
-    } else {
-      nextBtn.style.display = 'flex';
-      beforeBtn.style.display = 'flex';
-    }
+    // header.tab-bar の中にある「.tab-btn」クラスを持つ要素だけを配列にする
+const tabButtons = Array.from(document.querySelectorAll('header.tab-bar button'));
+const currentActiveBtn = document.querySelector('header.tab-bar button.active');
+const currentIndex = tabButtons.indexOf(currentActiveBtn);
+
+if (currentIndex === -1) {
+  nextBtn.style.setProperty('display', 'flex', 'important');
+  beforeBtn.style.setProperty('display', 'flex', 'important');
+} else {
+  // 0番目（TOP）または 1番目（Beer）のときは左矢印を隠す（運用に合わせて調整してください）
+  // ここでは、一番左（TOP、インデックス0）のときだけ左矢印を隠す設定にします
+  if (currentIndex === 0) {
+    beforeBtn.style.setProperty('display', 'none', 'important');
+  } else {
+    beforeBtn.style.setProperty('display', 'flex', 'important');
+  }
+
+  if (currentIndex === tabButtons.length - 1) {
+    nextBtn.style.setProperty('display', 'none', 'important');
+  } else {
+    nextBtn.style.setProperty('display', 'flex', 'important');
+  }
+}
   }
 }
 
@@ -120,12 +131,16 @@ function triggerSpecialAnimation(productId) {
 
   const taxIncluded = Math.floor(product.price * 1.1);
 
+  // ★個数を1にリセット
+  modalQuantity = 1; 
+
   presentationContainer.style.display = 'flex';
 
   presentationContainer.innerHTML = `
     <div class="special-wrapper">
       <div class="presentation-left-image" onclick="event.stopPropagation();">
-<img src="${product.clipingImage || product.image}" alt="${product.name}" onerror="this.src='./lastAssignment/default.png'">      </div>
+        <img src="${product.clipingImage || product.image}" alt="${product.name}" onerror="this.src='./lastAssignment/default.png'">
+      </div>
       <div class="presentation-right-content" onclick="event.stopPropagation();">
         <div style="white-space: nowrap; padding-left: 100px;">
           <div style="font-size: 36px; font-weight: bold; color: #000; margin-bottom: 10px;">${product.name}</div>
@@ -134,11 +149,24 @@ function triggerSpecialAnimation(productId) {
             <span style="font-size: 16px;">(税込)</span>
           </div>
         </div>
-        <div class="frame-order-button" style="width: 100%; display: flex; justify-content: flex-end; margin-top: auto;">
-          <button class="order-button" style="width: 240px; height: 60px; font-size: 1.5rem; font-weight: bold;" onclick="addDirectFromAnimation('${product.id}', event)">
-            注文リストに入れる
-          </button>
-        </div>
+        
+<div class="frame-order-button" style="width: 100%; display: flex; justify-content: flex-end; align-items: center; gap: 20px; margin-top: auto;">
+  
+  <!-- 💡 style属性の先頭に pointer-events: auto; を追加し、全体でクリックを確実に有効化します -->
+  <div style="pointer-events: auto; display: flex; align-items: center; height: 60px; background: #fff; border: 2px solid #7A7A7A; border-radius: 8px; overflow: hidden;">
+    
+    <!-- 💡 cursor: pointer; が確実に効くように再指定 -->
+    <button type="button" style="width: 50px; height: 100%; background: #F0F0F0; border: none; font-size: 28px; font-weight: bold; cursor: pointer; display: block;" onclick="changeModalQuantity(-1, event)">-</button>
+    
+    <div id="modalQtyText" style="width: 60px; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; border-left: 2px solid #7A7A7A; border-right: 2px solid #7A7A7A;">1</div>
+    
+    <button type="button" style="width: 50px; height: 100%; background: #F0F0F0; border: none; font-size: 28px; font-weight: bold; cursor: pointer; display: block;" onclick="changeModalQuantity(1, event)">+</button>
+  </div>
+
+  <button class="order-button" style="width: 240px; height: 60px; font-size: 1.5rem; font-weight: bold;" onclick="addDirectFromAnimation('${product.id}', event)">
+    注文リストに入れる
+  </button>
+</div>
       </div>
     </div>
   `;
@@ -151,6 +179,9 @@ function triggerSpecialAnimation(productId) {
 }
 
 function addDirectFromAnimation(productId, event) {
+  if (event) {
+    playFlyToCartAnimation(event);
+  }
   if (event) {
     event.stopPropagation();
     event.preventDefault();
@@ -244,6 +275,32 @@ function updateCartDisplay() {
  * ==========================================
  */
 let currentModalProduct = null;
+let modalQuantity = 1; // カウンター用の変数をここで安全に宣言
+
+// 個数を増減させる関数（openProductModal の外側に定義）
+function changeModalQuantity(amount, event) {
+  if (event) {
+    event.stopPropagation(); // 親要素のクリックイベントと競合するのを防ぐ
+    event.preventDefault();
+  }
+
+  const targetQuantity = modalQuantity + amount;
+
+  if (targetQuantity < 1) {
+    return; // 1未満には減らさない
+  }
+
+  if (targetQuantity > 10) {
+    alert('一度に選択できる数量は10個までです。それ以上の個数は、再度カートに入れてご注文ください。');
+    return;
+  }
+
+  modalQuantity = targetQuantity;
+  const qtyTextElement = document.getElementById('modalQtyText');
+  if (qtyTextElement) {
+    qtyTextElement.textContent = modalQuantity;
+  }
+}
 
 function openProductModal(productId) {
   const modal = document.getElementById('productModal');
@@ -255,8 +312,9 @@ function openProductModal(productId) {
   if (!product) return;
 
   currentModalProduct = product;
+  modalQuantity = 1; // モーダルを開いたときは常に1個にリセット
 
-  // ⑥ モーダル内の各要素サイズをさらに拡大
+  // ⑥ モーダル内の各要素サイズをさらに拡大（ボタンの左側にカウンターを追加）
   modalContent.innerHTML = `
     <div style="text-align: center; font-size: 32px; font-weight: bold; margin-top: 25px; color: #000; line-height: 1.4;">
       ${product.name}
@@ -268,8 +326,16 @@ function openProductModal(productId) {
       価格：￥${product.price.toLocaleString()}
     </p>
     
-    <div style="display: flex; justify-content: center; margin-top: 35px; width: 100%;">
-      <button class="order-button" style="width: 260px; height: 60px; font-size: 1.5rem; font-weight: bold;" onclick="confirmAddToCart(event)">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 35px; width: 100%;">
+      
+      <!-- ボタンの左側に＋ーの個数選択カウンターを設置 -->
+      <div style="display: flex; align-items: center; height: 60px; background: #fff; border: 2px solid #7A7A7A; border-radius: 8px; overflow: hidden;">
+        <button type="button" style="width: 50px; height: 100%; background: #F0F0F0; border: none; font-size: 28px; font-weight: bold; cursor: pointer;" onclick="changeModalQuantity(-1)">-</button>
+        <div id="modalQtyText" style="width: 60px; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; border-left: 2px solid #7A7A7A; border-right: 2px solid #7A7A7A;">1</div>
+        <button type="button" style="width: 50px; height: 100%; background: #F0F0F0; border: none; font-size: 28px; font-weight: bold; cursor: pointer;" onclick="changeModalQuantity(1)">+</button>
+      </div>
+
+      <button class="order-button" style="width: 260px; height: 60px; font-size: 1.5rem; font-weight: bold; margin: 0;" onclick="confirmAddToCart(event)">
         注文リストに入れる
       </button>
     </div>
@@ -277,8 +343,11 @@ function openProductModal(productId) {
 
   modal.style.display = 'flex';
 }
-
 function confirmAddToCart(event) {
+  if (event) {
+    playFlyToCartAnimation(event);
+  }
+
   if (event) {
     event.stopPropagation();
     event.preventDefault();
@@ -289,13 +358,14 @@ function confirmAddToCart(event) {
   const existingItem = cart.find(item => item.id === currentModalProduct.id);
 
   if (existingItem) {
-    existingItem.quantity += 1;
+    // 固定で +1 していた部分を選択された数量分（modalQuantity）加算に変更
+    existingItem.quantity += modalQuantity;
   } else {
     cart.push({
       id: currentModalProduct.id,
       name: currentModalProduct.name,
       price: currentModalProduct.price,
-      quantity: 1
+      quantity: modalQuantity // 選択された数量で新規追加
     });
   }
 
@@ -305,7 +375,6 @@ function confirmAddToCart(event) {
   const presentationContainer = document.getElementById('specialPresentation');
   if (presentationContainer) presentationContainer.innerHTML = '';
 }
-
 function closeModal() {
   const modal = document.getElementById('productModal');
   if (modal) {
@@ -313,15 +382,17 @@ function closeModal() {
   }
   currentModalProduct = null;
 }
-
 /**
  * ==========================================
  * 6. イベントリスナーと初期化
  * ==========================================
  */
 document.addEventListener('DOMContentLoaded', () => {
-  displayMenus();
+  // 1. まず最初にタブにイベントを設定する
   setupTabEvents();
+  
+  // 2. その後、最初のメニューを描画する（これで初期タブのactiveを検知して矢印が正しく判定されます）
+  displayMenus();
 });
 
 function setupTabEvents() {
@@ -336,6 +407,7 @@ function setupTabEvents() {
       const category = button.getAttribute('data-category');
       if (category) {
         currentCategory = category;
+        // タブが切り替わったら、メニューの再描画と同時に矢印の表示・非表示も再計算させる
         displayMenus(); 
       }
     });
@@ -346,18 +418,18 @@ function setupTabEvents() {
   if (nextBtn) {
     nextBtn.addEventListener('click', (event) => {
       event.stopPropagation();
-      const currentActiveBtn = document.querySelector('header.tab-bar button.tab-btn.active');
       const tabButtonsArray = Array.from(tabButtons);
+      const currentActiveBtn = document.querySelector('header.tab-bar button.tab-btn.active');
       const currentIndex = tabButtonsArray.indexOf(currentActiveBtn);
 
       let nextIndex = currentIndex + 1;
       if (currentIndex === -1 || nextIndex >= tabButtonsArray.length) {
-        nextIndex = 0;
+        return; // 一番右にいるときは何もしない（矢印も消えているはず）
       }
 
       const nextButton = tabButtonsArray[nextIndex];
       if (nextButton) {
-        nextButton.click();
+        nextButton.click(); // 次のタブを擬似クリック（中で displayMenus が走ります）
       }
     });
   }
@@ -367,25 +439,21 @@ function setupTabEvents() {
   if (beforeBtn) {
     beforeBtn.addEventListener('click', (event) => {
       event.stopPropagation();
-      const currentActiveBtn = document.querySelector('header.tab-bar button.tab-btn.active');
       const tabButtonsArray = Array.from(tabButtons);
+      const currentActiveBtn = document.querySelector('header.tab-bar button.tab-btn.active');
       const currentIndex = tabButtonsArray.indexOf(currentActiveBtn);
 
       let prevIndex = currentIndex - 1;
       if (currentIndex === -1 || prevIndex < 0) {
-        prevIndex = tabButtonsArray.length - 1; 
+        return; // 一番左にいるときは何もしない（矢印も消えているはず）
       }
 
       const prevButton = tabButtonsArray[prevIndex];
       if (prevButton) {
-        prevButton.click();
+        prevButton.click(); // 前のタブを擬似クリック（中で displayMenus が走ります）
       }
     });
   }
-
-  document.addEventListener('click', (event) => {
-
-  });
 }
 
 window.addEventListener('click', (event) => {
@@ -396,13 +464,15 @@ window.addEventListener('click', (event) => {
 });
 
 const container = document.getElementById('specialPresentation');
-container.addEventListener('click', (e) => {
-  if (e.target === container) {
-    closeSpecialPresentation();
-  }
-});
+if (container) {
+  container.addEventListener('click', (e) => {
+    if (e.target === container) {
+      closeSpecialPresentation();
+    }
+  });
+}
 
-// 画面が読み込まれたら注文確定ボタンにイベントを設定する
+// 注文確定ボタンのイベント
 document.addEventListener('DOMContentLoaded', () => {
   const confirmOrderBtn = document.querySelector('.confirm-order-btn');
   
@@ -417,10 +487,78 @@ document.addEventListener('DOMContentLoaded', () => {
       
       if (isConfirmed) {
         alert('注文が確定しました！');
-        
         cart = [];
         updateCartDisplay();
       }
     });
   }
 });
+
+/**
+ * ==========================================
+ * 注文ボタンからカートへ飛ぶアニメーション演出
+ * ==========================================
+ */
+function playFlyToCartAnimation(event) {
+  // クリックされたボタン、またはイベントの発生元を取得
+  const button = event.currentTarget || event.target;
+  if (!button) return;
+
+  // 1. 出発点（ボタン）の画面上の位置を取得
+  const btnRect = button.getBoundingClientRect();
+  
+  // 2. 到着点（注文リストのカートアイコン、またはカートコンテナ）の位置を取得
+  const cartTarget = document.getElementById('cartItems') || document.querySelector('.cart-icon');
+  if (!cartTarget) return;
+  const cartRect = cartTarget.getBoundingClientRect();
+
+  // 3. 飛ばす正方形の要素を動的に作成
+  const square = document.createElement('div');
+  square.className = 'flying-square';
+
+  // 4. 初期位置をボタンの中央付近に設定
+  square.style.left = `${btnRect.left + btnRect.width / 2 - 5}px`;
+  square.style.top = `${btnRect.top + btnRect.height / 2 - 5}px`;
+
+  // 画面（body）に一旦追加
+  document.body.appendChild(square);
+
+  // 5. ブラウザの描画を1フレーム待ってから、目的地へ移動（transitionを発動させる）
+  requestAnimationFrame(() => {
+    // 到着点（カートの中央付近）の座標を計算
+    square.style.left = `${cartRect.left + cartRect.width / 2 - 5}px`;
+    square.style.top = `${cartRect.top + cartRect.height / 2 - 5}px`;
+    
+    // 途中で小さく消えていくエフェクト（お好みで調整してください）
+    square.style.transform = 'scale(0.3)';
+    square.style.opacity = '0';
+  });
+
+  // 6. アニメーションが終わったら（0.6秒後）要素を完全に削除
+  setTimeout(() => {
+    square.remove();
+  }, 600);
+}
+
+// モーダル内の数量をプラスマイナスする関数
+function changeModalQuantity(amount) {
+  const targetQuantity = modalQuantity + amount;
+
+  if (targetQuantity < 1) {
+    // 最小値は1（何もしない）
+    return;
+  }
+
+  if (targetQuantity > 10) {
+    // 10個を超えようとした場合にアラートを出す
+    alert('一度に選択できる数量は10個までです。それ以上の個数は、再度カートに入れてご注文ください。');
+    return;
+  }
+
+  // 範囲内であれば数量を更新して画面に反映
+  modalQuantity = targetQuantity;
+  const qtyTextElement = document.getElementById('modalQtyText');
+  if (qtyTextElement) {
+    qtyTextElement.textContent = modalQuantity;
+  }
+}

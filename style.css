@@ -390,7 +390,6 @@ header.tab-bar button.tab-btn.active:not(.tab-btn-beer) span {
 
 .nav-before-btn {
   left: 20px;
-  display: none;
 }
 
 /* 矢印アイコン生成用（擬似要素パーツ） */
@@ -463,7 +462,7 @@ header.tab-bar button.tab-btn.active:not(.tab-btn-beer) span {
 
 /* ユーティリティ共通ボタン（タップハンドル画像ベース） */
 .util-btn {
-  width: 100% !important;
+  width: 120% !important;
   max-width: 250px !important;
   min-width: 0 !important; 
   height: auto !important;
@@ -472,7 +471,7 @@ header.tab-bar button.tab-btn.active:not(.tab-btn-beer) span {
   justify-content: center !important;
   align-items: center !important;
   padding: 0 !important;
-  margin-right: 0 !important;
+  margin-right: -55px !important;
   border: none !important;
   background-color: transparent !important;
   background-size: 100% 100% !important; 
@@ -870,7 +869,7 @@ body > .special-presentation-container .special-wrapper {
 /* 右側テキスト・注文エリア */
 .presentation-right-content {
   position: absolute;
-  left: calc(20% + 232px); 
+  left: calc(20% + 142px); 
   top: 0; 
   height: 543px; 
   width: 0; 
@@ -926,4 +925,16 @@ body > .special-presentation-container .special-wrapper {
     width: 650px; 
     opacity: 1;
   }
+}
+
+/* アニメーション用の飛び出す正方形 */
+.flying-square {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  background-color: #000000; /* 後で変更しやすいように黒 */
+  z-index: 9999; /* 最前面に表示 */
+  pointer-events: none; /* クリックを邪魔しないようにする */
+  border-radius: 0px;   /* 正方形 */
+  transition: all 1.6s cubic-bezier(0.25, 1, 0.5, 1); /* 飛ぶ速度とイージング */
 }
