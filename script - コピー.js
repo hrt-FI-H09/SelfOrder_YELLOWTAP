@@ -386,13 +386,13 @@ ${product.dryAndSweet !== undefined ? `
   // 【2】ビール以外のカテゴリーのときのレイアウト
   // ==========================================
   presentationContainer.innerHTML = `
-<div class="special-wrapper">
-    <div class="presentation-left-image non-beer-image" onclick="event.stopPropagation();">
-      <img class="clipping-mode-img" src="${product.clippingImage || product.image}" alt="${product.name}" onerror="this.src='./lastAssignment/default.png'">
-    </div>
+    <div class="special-wrapper">
+<div class="presentation-left-image" onclick="event.stopPropagation();">
+        <img class="clipping-mode-img" src="${product.clippingImage || product.image}" alt="${product.name}" onerror="this.src='./lastAssignment/default.png'">
+      </div>
       
       <div class="presentation-right-content" onclick="event.stopPropagation();">
-        <div style="white-space: nowrap; padding-left: 40px; padding-right: 40px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box;">
+        <div style="white-space: nowrap; padding-left: 100px; padding-right: 40px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box;">
           
           <div style="font-size: 32px; font-weight: bold; color: #000; margin-bottom: 10px; white-space: normal; word-break: break-all;">
             ${product.name}
