@@ -325,9 +325,10 @@ header.tab-bar button.tab-btn.active:not(.tab-btn-beer) span {
 }
 
 .price {
-  font-family: 'Yu Mincho', serif;
+font-family: inherit;
   font-size: 32px;
   font-weight: 400;
+  color: #E35205; /* ★ 黒から濃いオレンジへ変更 */
   margin-right: 4px;
 }
 
@@ -1290,6 +1291,7 @@ body > .special-presentation-container .special-wrapper {
 }
 
 .summary-total-price {
+  font-family: inherit;
   font-size: 40px;
   font-weight: 1000;
   color: #CC4700;
@@ -1581,6 +1583,7 @@ body > .special-presentation-container .special-wrapper {
 
 /* メニューの価格 */
 .normal-menu-price {
+  font-family: inherit;
   font-size: 14px;
   font-weight: 800;
   color: #E35205;
@@ -1627,4 +1630,158 @@ body > .special-presentation-container .special-wrapper {
 /* 右側コンテンツとの結合をより自然にするため、位置の微調整が必要な場合 */
 .presentation-left-image.non-beer-image + .presentation-right-content {
   left: calc(20% + 280px) !important; /* 画像の幅に合わせて右側をスライド */
+}
+
+/* ==========================================================================
+   おすすめセットメニュー：連動アニメーションレイアウト
+   ========================================================================== */
+
+/* 1. 元のビールモーダル（.special-wrapper）の初期化と左シフト */
+.special-wrapper {
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* セットメニュー選択時に左側へスッと寄るスタイル */
+.special-wrapper.slide-left-active {
+  transform: translateX(-240px) !important; /* 左側にスライド */
+}
+
+/* 2. 右側から下からフロートインしてくるセットメニュー外枠 */
+/* ==========================================================================
+   セットメニューミニカード：画像表示修正＆コンパクトレイアウト
+   ========================================================================== */
+
+/* パネル全体のサイズ調整（縦幅をスマートに縮小） */
+.set-menu-float-panel {
+  position: absolute;
+  top: 185px; /* ビールのボタン群と高さを揃える */
+  left: calc(20% + 720px);
+  width: 300px;
+  height: 430px; 
+  transform: translateY(60px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+  pointer-events: auto;
+  z-index: 1001;
+}
+
+.set-menu-float-panel.float-in-active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 黄色い枠線を持つ、白ベースのミニ台紙カード */
+.set-menu-placeholder-card {
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border: 3px solid #FFBE0B; /* 外枠の黄色い線は残す */
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* ★ 商品画像表示エリア（消失バグを修正） */
+.set-menu-compact-thumb {
+  width: 100% !important;
+  height: 140px !important; /* 縦幅のサイズを固定して領域を確保 */
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  display: block !important; /* 確実に要素を描画させる */
+}
+
+/* テキスト情報エリア */
+.set-menu-compact-info {
+  width: 100%;
+  padding: 2px 4px;
+  box-sizing: border-box;
+}
+
+/* 商品名 */
+.set-menu-compact-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 2px 0;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+}
+
+/* 価格 */
+.set-menu-compact-price {
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 800;
+  color: #E35205;
+  margin: 0;
+}
+
+/* ==========================================================================
+   セットメニューミニカード：縦並び画像・テキストレイアウト
+   ========================================================================== */
+
+/* 外枠の長方形ボックス（高さを280pxに微調整） */
+.set-menu-detail-box {
+  width: 100%;
+  height: 280px;
+  background: #FFF3D4;
+  border: 2px solid #FFBE0B;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column; /* 縦並び */
+  overflow: hidden; /* 画像の角丸はみ出しを防止 */
+  box-sizing: border-box;
+}
+
+/* 上半分の画像表示エリア */
+.set-menu-detail-thumb {
+  width: 100%;
+  height: 160px; /* 画像の縦幅 */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-bottom: 2px dashed #FFBE0B; /* 画像と文字の境界線 */
+  flex-shrink: 0;
+}
+
+/* 下半分のテキスト情報エリア */
+.set-menu-detail-info {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #ffffff; /* 文字背景を白にして読みやすく（お好みで#FFF3D4のままでもOK） */
+}
+
+/* 商品名 */
+.set-menu-detail-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 4px 0;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 長い商品名も2行までで丸める */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 価格 */
+.set-menu-detail-price {
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  color: #E35205;
+  margin: 0;
 }

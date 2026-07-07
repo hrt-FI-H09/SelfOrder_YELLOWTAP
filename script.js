@@ -14,7 +14,7 @@ const products = [
     description: 'まずはこれ！喉ごし抜群で、どんなおつまみにも絶対に合う当店のハウスラガー。すっきりクリーンな味わいと、キリッとした爽快感が爽やかに突き抜けます。',
     alcohol: 5.0,
     dryAndSweet: 15,
-
+    recommendations: ['snack4', 'snack6']
   },
   { 
     id: 'beer2', 
@@ -26,6 +26,7 @@ const products = [
     description: 'ほんのり香る天然蜂蜜のまろやかな甘みと、シトラスホップのジューシーな香りが絶妙にマッチ。苦味が少なくてとってもフルーティーな、当店自慢の1杯です。',
     alcohol: 5.5,
     dryAndSweet: 75,
+    recommendations: ['snack5', 'snack11']
   },
   { 
     id: 'beer3', 
@@ -37,6 +38,7 @@ const products = [
     description: '深煎りコーヒー豆の香ばしい香りと、チョコレートモルトの甘くほろ苦い味わいが絶妙に絡み合う、濃厚でリッチなスタウト。夜のひとときにぴったりの1杯です。',
     alcohol: 6.5,
     dryAndSweet: 60,
+    recommendations: ['snack12', 'sweet1']
   },
   { 
     id: 'beer5', 
@@ -47,7 +49,8 @@ const products = [
     clipingImage: './lastAssignment/beer5_cliping.png',
     description: '鮮やかなオーロラのような色合いと、トロピカルフルーツの香りが特徴のニューエイジIPA。苦味は控えめで、フルーティーな甘みと爽やかな酸味が口いっぱいに広がります。',
     alcohol: 4.5,
-    dryAndSweet: 85
+    dryAndSweet: 85,
+    recommendations: ['snack5', 'snack6']
   },
   {
     id: 'snack1',
@@ -262,7 +265,6 @@ function displayMenus() {
   }
 
   filteredProducts.forEach(product => {
-    const taxIncluded = Math.floor(product.price * 1.1);
     const card = document.createElement('div');
     card.className = 'menu-card';
     
@@ -319,8 +321,6 @@ function triggerSpecialAnimation(productId) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
 
-  const taxIncluded = Math.floor(product.price * 1.1);
-
   modalQuantity = 1; 
 
   presentationContainer.style.display = 'flex';
@@ -328,9 +328,35 @@ function triggerSpecialAnimation(productId) {
 // カテゴリーによって出力するHTMLを条件分岐
 if (product.category === 'beer') {
   // ==========================================
-  // 【1】ビールカテゴリーのときのレイアウト（従来通り）
+  // 【1】ビールカテゴリーのときのレイアウト
   // ==========================================
-presentationContainer.innerHTML = `
+
+  // おすすめ商品のHTMLを動的に生成
+  let recommendHtml = '';
+  if (product.recommendations && product.recommendations.length > 0) {
+    product.recommendations.forEach(recId => {
+      const recProduct = products.find(p => p.id === recId);
+      if (recProduct) {
+recommendHtml += `
+  <div class="recommend-card" 
+       style="background-image: url('${recProduct.clipingImage || recProduct.image}'); background-size: cover; background-position: center; background-repeat: no-repeat; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px;"
+       onclick="showSetMenuPanel('${recProduct.id}'); event.stopPropagation();">
+    <div style="background: rgba(255, 255, 242, 0.9); padding: 6px; border-radius: 6px; border: 1px dashed #FFBE0B;">
+      <div style="font-size: 13px; font-weight: 800; color: #333; white-space: normal; line-height: 1.2;">${recProduct.name}</div>
+      <div style="font-size: 12px; font-weight: 800; color: #E35205; margin-top: 2px;">¥${recProduct.price.toLocaleString()}</div>
+    </div>
+  </div>
+`;
+      }
+    });
+  } else {
+    recommendHtml = `
+      <div class="recommend-card" style="display: flex; align-items: center; justify-content: center; color: #7A7A7A; font-size: 14px;"></div>
+      <div class="recommend-card" style="display: flex; align-items: center; justify-content: center; color: #7A7A7A; font-size: 14px;"></div>
+    `;
+  }
+
+  presentationContainer.innerHTML = `
     <div class="special-wrapper">
       <div class="presentation-left-image" onclick="event.stopPropagation();">
         <img src="${product.clipingImage || product.image}" alt="${product.name}" onerror="this.src='./lastAssignment/default.png'">
@@ -340,48 +366,50 @@ presentationContainer.innerHTML = `
           <div style="font-size: 32px; font-weight: bold; color: #000; margin-bottom: 10px; white-space: normal; word-break: break-all;">
            ${product.name}
           </div>
-            <div style="font-size: 32px; color: #333; margin-top: 15px;">
-            <span>¥${product.price.toLocaleString()}</span>
-            <span style="font-size: 16px;">(税込)</span>
-          </div>
-<div class="beer-specs">
-  ${product.alcohol !== undefined ? `<span class="modal-product-alcohol">Alc. ${product.alcohol}%</span>` : ''}
-${product.dryAndSweet !== undefined ? `
-    <div class="taste-slider-container">
-     <div class="taste-pointer-area">
-      <div class="taste-pointer" style="left: ${product.dryAndSweet}%;">▼</div>
-      </div>
-       <div class="taste-bar-wrapper">
-        <span class="taste-label left-label">辛口</span>
-        <div class="taste-line"></div>
-        <span class="taste-label right-label">甘口</span>
-      </div>
-    </div>
-  ` : ''}
+<div style="font-size: 32px; color: #E35205; font-weight: 800; font-family: inherit; margin-top: 15px;">
+  <span>¥${product.price.toLocaleString()}</span>
+  <span style="font-size: 16px; color: #7A7A7A; font-weight: normal;">(税込)</span>
 </div>
-         <div class="modal-product-description" style="white-space: normal; max-width: 500px;">
-           ${product.description || ''}
+          <div class="beer-specs">
+            ${product.alcohol !== undefined ? `<span class="modal-product-alcohol">Alc. ${product.alcohol}%</span>` : ''}
+            ${product.dryAndSweet !== undefined ? `
+              <div class="taste-slider-container">
+               <div class="taste-pointer-area">
+                <div class="taste-pointer" style="left: ${product.dryAndSweet}%;">▼</div>
+                </div>
+                 <div class="taste-bar-wrapper">
+                  <span class="taste-label left-label">辛口</span>
+                  <div class="taste-line"></div>
+                  <span class="taste-label right-label">甘口</span>
+                </div>
+              </div>
+            ` : ''}
           </div>
+          <div class="modal-product-description" style="white-space: normal; max-width: 500px;">
+             ${product.description || ''}
+          </div>
+          
           <div class="recommend-title">おすすめのセットメニュー</div>
+          
           <div class="recommend-menu">
-  <div class="recommend-card"></div>
-  <div class="recommend-card" ></div>
-</div>
+            ${recommendHtml}
+          </div>
        </div>
+       
        <div class="frame-order-button" style="width: 100%; display: flex; justify-content: flex-end; align-items: center; gap: 20px; margin-top: auto;">
-  <div style="pointer-events: auto; display: flex; align-items: center; height: 60px; background: #fff; border: 2px solid #7A7A7A; border-radius: 8px; overflow: hidden;">
-   <button type="button" style="width: 50px; height: 100%; background: #F0F0F0; border: none; font-size: 28px; font-weight: bold; cursor: pointer; display: block;" onclick="changeModalQuantity(-1, event)">-</button>
-   <div id="modalQtyText" style="width: 60px; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; border-left: 2px solid #7A7A7A; border-right: 2px solid #7A7A7A;">1</div>
-   <button type="button" style="width: 50px; height: 100%; background: #F0F0F0; border: none; font-size: 28px; font-weight: bold; cursor: pointer; display: block;" onclick="changeModalQuantity(1, event)">+</button>
-  </div>
-  <button class="order-button" style="width: 240px; height: 60px; font-size: 1.5rem; font-weight: bold;" onclick="addDirectFromAnimation('${product.id}', event)">
-    注文リストに入れる
-  </button>
-</div>
+          <div style="pointer-events: auto; display: flex; align-items: center; height: 60px; background: #fff; border: 2px solid #7A7A7A; border-radius: 8px; overflow: hidden;">
+           <button type="button" style="width: 50px; height: 100%; background: #F0F0F0; border: none; font-size: 28px; font-weight: bold; cursor: pointer; display: block;" onclick="changeModalQuantity(-1, event)">-</button>
+           <div id="modalQtyText" style="width: 60px; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; border-left: 2px solid #7A7A7A; border-right: 2px solid #7A7A7A;">1</div>
+           <button type="button" style="width: 50px; height: 100%; background: #F0F0F0; border: none; font-size: 28px; font-weight: bold; cursor: pointer; display: block;" onclick="changeModalQuantity(1, event)">+</button>
+          </div>
+          <button class="order-button" style="width: 240px; height: 60px; font-size: 1.5rem; font-weight: bold;" onclick="addDirectFromAnimation('${product.id}', event)">
+            注文リストに入れる
+          </button>
+        </div>
       </div>
     </div>
   `;
-} else {
+}else {
   // ==========================================
   // 【2】ビール以外のカテゴリーのときのレイアウト
   // ==========================================
@@ -462,7 +490,22 @@ function addDirectFromAnimation(productId, event) {
   }
 
   updateCartDisplay();
-  closeSpecialPresentation();
+// ★ ここを修正：セットメニューのパネルが開いているときは、全体を閉じずに右パネルだけを消す
+  const panel = document.getElementById('setMenuFloatPanel');
+  if (panel) {
+    // アニメーション付きで右パネルを片方だけ消し、ビールを元の位置に戻す
+    panel.classList.remove('float-in-active');
+    setTimeout(() => {
+      panel.remove();
+      const specialWrapper = document.querySelector('.special-wrapper');
+      if (specialWrapper) {
+        specialWrapper.classList.remove('slide-left-active');
+      }
+    }, 400);
+  } else {
+    // 通常の注文リスト追加時は、今まで通りモーダル全体を閉じる
+    closeSpecialPresentation();
+  }
 }
 function closeSpecialPresentation() {
   const presentationContainer = document.getElementById('specialPresentation');
@@ -1120,4 +1163,61 @@ if (callBtn) {
       alert('店員を呼び出しました。しばらくお待ちください。');
     }
   });
+}
+
+// セットメニューのミニカードを下からフロートインさせる関数
+function showSetMenuPanel(productId) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+
+  // 1. 元のビールモーダルに左スライド用のクラスを付与
+  const specialWrapper = document.querySelector('.special-wrapper');
+  if (specialWrapper) {
+    specialWrapper.classList.add('slide-left-active');
+  }
+
+  // 2. すでにパネルが存在していれば一旦削除
+  const existingPanel = document.getElementById('setMenuFloatPanel');
+  if (existingPanel) {
+    existingPanel.remove();
+  }
+
+  // 3. セットメニュー用のコンテナを生成
+  const panel = document.createElement('div');
+  panel.id = 'setMenuFloatPanel';
+  panel.className = 'set-menu-float-panel';
+  panel.onclick = function(e) { e.stopPropagation(); };
+
+  // 4. 内部構造（画像とテキストをダイレクトに配置、画像参照を保証）
+  panel.innerHTML = `
+    <div class="set-menu-placeholder-card">
+      <div style="font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #333; text-align: center; border-bottom: 2px dashed #FFBE0B; padding-bottom: 6px;">
+        セットメニュー
+      </div>
+      
+      <div class="set-menu-compact-thumb" style="background-image: url('${product.clipingImage || product.image}');"></div>
+      <div class="set-menu-compact-info">
+        <p class="set-menu-compact-name">${product.name}</p>
+        <p class="set-menu-compact-price">¥${product.price.toLocaleString()} <span style="font-size: 11px; color: #7A7A7A;">(税込)</span></p>
+      </div>
+
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; width: 100%;">
+        <button class="order-button" style="width: 100%; height: 50px; font-size: 1.2rem; font-weight: bold;" 
+                onclick="addDirectFromAnimation('${product.id}', event);">
+          セットにこれを追加
+        </button>
+        <button type="button" style="width: 100%; height: 36px; background: #F0F0F0; border: 1px solid #7A7A7A; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer;" 
+                onclick="document.getElementById('setMenuFloatPanel').classList.remove('float-in-active'); setTimeout(() => { document.getElementById('setMenuFloatPanel').remove(); document.querySelector('.special-wrapper').classList.remove('slide-left-active'); }, 400);">
+          キャンセル
+        </button>
+      </div>
+    </div>
+  `;
+
+  const presentationContainer = document.getElementById('specialPresentation');
+  presentationContainer.appendChild(panel);
+
+  setTimeout(() => {
+    panel.classList.add('float-in-active');
+  }, 50);
 }
