@@ -30,12 +30,8 @@ body {
   flex-shrink: 0;
   overflow: hidden;
   background: #ffffff;
-  
-  /* 0.66倍縮小を見越したベースサイズ計算 */
   width: calc(100vw / 0.66);
   height: calc(100vh / 0.66);
-  
-  /* 全体を中央基準で0.66倍に縮小 */
   transform: scale(0.66);
   transform-origin: center center;
 }
@@ -179,7 +175,6 @@ header.tab-bar,
 }
 
 /* --- 通常タブ（Main, Snacks等）：アクティブ時 --- */
-
 header.tab-bar button.tab-btn.active:not(.tab-btn-beer) {
   position: relative;
   width: 140px !important;    
@@ -256,14 +251,13 @@ header.tab-bar button.tab-btn.active:not(.tab-btn-beer) span {
   gap: 53px; 
   width: 100%;
   height: auto !important; 
-  padding-bottom: 100px !important; /* 計算ズレによる見切れ防止の底上げ余白 */
+  padding-bottom: 100px !important;
 }
 
 
 /* ==========================================================================
    5. メニュー商品カード
    ========================================================================== */
-
 .menu-card {
   width: 100%;
   display: flex;
@@ -327,18 +321,17 @@ header.tab-bar button.tab-btn.active:not(.tab-btn-beer) span {
 .price {
 font-family: inherit;
   font-size: 32px;
-  font-weight: 400;
-  color: #E35205; /* ★ 黒から濃いオレンジへ変更 */
+  font-weight: 800;
+  color: #E35205;
   margin-right: 4px;
 }
 
 .tax {
-  font-family: 'Yu Mincho', serif;
+font-family: inherit;
   font-size: 16px;
   font-weight: 600;
 }
 
-/* 注文ボタン枠・ボタン本体 */
 .frame-order-button {
   display: flex;
   justify-content: flex-end;
@@ -394,7 +387,6 @@ font-family: inherit;
   left: 20px;
 }
 
-/* 矢印アイコン生成用 */
 .nav-next-btn::before,
 .nav-next-btn::after,
 .nav-before-btn::before,
@@ -416,7 +408,7 @@ font-family: inherit;
   background: #333333; 
 }
 
-/* 右向き矢印 ( > ) 形状設定 */
+/* 右向き矢印 */
 .nav-next-btn::before {
   transform: rotate(45deg);
   top: 24px; 
@@ -426,7 +418,7 @@ font-family: inherit;
   top: 42px; 
 }
 
-/* 左向き矢印 ( < ) 形状設定 */
+/* 左向き矢印*/
 .nav-before-btn::before {
   transform: rotate(-45deg);
   top: 24px; 
@@ -494,7 +486,6 @@ font-family: inherit;
   letter-spacing: 1.5px !important;
 }
 
-/* ハンドル背景画像割り当て */
 .btn-check    { background-image: url('./lastAssignment/tapHandle1.png') !important; }
 .btn-service  { background-image: url('./lastAssignment/tapHandle3.png') !important; }
 .btn-history  { background-image: url('./lastAssignment/tapHandle3.png') !important; }
@@ -516,7 +507,6 @@ font-family: inherit;
 /* ==========================================================================
    8. カートセクション
    ========================================================================== */
-
 .cart-section {
   display: flex;
   width: 270px;
@@ -557,7 +547,6 @@ font-family: inherit;
   height: 32px;
 }
 
-/* カート下部固定エリア */
 .cart-footer {
   display: flex;
   flex-direction: column;
@@ -617,7 +606,6 @@ font-family: inherit;
   overflow-y: auto; 
 }
 
-/* 商品が一定数以上で下部に影を出すクラス */
 .cart-items-scroll.has-shadow {
   box-shadow: inset 0 -15px 12px -5px rgba(0, 0, 0, 0.35); 
 }
@@ -634,7 +622,7 @@ font-family: inherit;
   border-radius: 5px;
 }
 
-/* --- カート内商品行 & 数量操作（Stepper） --- */
+/* --- カート内商品行 & 数量操作 --- */
 
 .cart-item {
   display: flex;
@@ -654,7 +642,6 @@ font-family: inherit;
   text-overflow: ellipsis;
 }
 
-/* 重複セクションの統合・サイズ指定調整 */
 .cart-container .item-name {
   font-size: 24px;
   max-width: 140px; 
@@ -664,7 +651,6 @@ font-family: inherit;
   max-width: 120px;
 }
 
-/* 数量コントロール枠 */
 .cart-container .quantity-control {
   display: flex;
   align-items: center;
@@ -683,7 +669,7 @@ font-family: inherit;
   border-radius: 3px;
 }
 
-/* Stepper ボタン類 */
+/* Stepper*/
 .cart-container .qty-btn {
   width: 36px;
   height: 100%;
@@ -724,7 +710,7 @@ font-family: inherit;
   padding-bottom: 8px;
 }
 
-/* Stepper 中央数値 */
+/* Stepper数値 */
 .cart-container .qty-text {
   width: 44px;
   height: 100%;
@@ -754,8 +740,6 @@ font-family: inherit;
 /* ==========================================================================
    9. 通常ポップアップモーダル
    ========================================================================== */
-
-/* モーダル暗転背景 */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -809,10 +793,8 @@ font-family: inherit;
 
 
 /* ==========================================================================
-   10. モーダル（Special Presentation）完全スライド同期版
+   10. モーダル（Special Presentation）
    ========================================================================== */
-
-/* 演出用固定暗転背景 */
 .special-presentation-container {
   display: none; 
   position: fixed; 
@@ -827,7 +809,7 @@ font-family: inherit;
   z-index: 2000; 
 }
 
-/* 演出コンテナ（絶対配置同期版） */
+/* 演出コンテナ */
 .main-content .special-presentation-container {
   position: absolute;
   z-index: 1500;
@@ -848,7 +830,7 @@ body > .special-presentation-container .special-wrapper {
   height: 603px;
 }
 
-/* 左側固定画像配置エリア（縦中央基準に統一） */
+/* 左側固定画像配置エリア */
 .presentation-left-image {
   position: absolute;
   top: 50%;
@@ -871,12 +853,8 @@ body > .special-presentation-container .special-wrapper {
 /* 右側テキスト・注文エリア */
 .presentation-right-content {
   position: absolute;
-  /* ★修正：top: 0 を廃止し、左側画像の上端と完全に一致する高さ（中央から画像の半分上）に指定 */
   top: calc(50% - 275px); 
-  /* ★修正：スタート位置（左側）をここを基準線として扱います */
   left: calc(20% + 162px); 
-  
-  /* ★修正：高さは450px、横幅は中身が縮まないように650pxで固定 */
   height: 545px !important; 
   width: 700px !important; 
   
@@ -891,13 +869,10 @@ body > .special-presentation-container .special-wrapper {
   opacity: 0;
   pointer-events: auto; 
   z-index: 1;
-
-  /* ★修正：横幅を広げる古いアニメーションを廃止し、X軸スライドインに変更 */
   animation: slideRightFromImage 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   animation-delay: 0.3s;
 }
 
-/* 演出モーダル内ボタン制御 */
 .presentation-right-content .frame-order-button {
   display: flex;
   justify-content: flex-end; 
@@ -914,7 +889,6 @@ body > .special-presentation-container .special-wrapper {
   font-weight: bold;
 }
 
-/* 演出用アニメーションキーフレーム */
 @keyframes clipIn {
   from {
     transform: translateY(-40%);
@@ -926,22 +900,18 @@ body > .special-presentation-container .special-wrapper {
   }
 }
 
-/* ★修正：スタートの基準線（left）より左側をクリップし、右に滑り出させるアニメーション */
 @keyframes slideRightFromImage {
   from {
-    /* 100%分左（画像の真裏）に隠し、かつ表示エリア外なので見えなくします */
     transform: translateX(-100%);
-    clip-path: inset(0 0 0 100%); /* カード自体の左側半分を非表示として隠すガード */
+    clip-path: inset(0 0 0 100%);
     opacity: 0;
   }
   to {
-    /* 本来の位置へぴったりスライド完了 */
     transform: translateX(0);
     clip-path: inset(0 0 0 0);
     opacity: 1;
   }
 }
-/* アニメーション用の飛び出す正方形 */
 .flying-square {
   position: fixed;
   width: 100px;
@@ -966,7 +936,6 @@ body > .special-presentation-container .special-wrapper {
 /* ==========================================================================
    11. 注文履歴セクション
    ========================================================================== */
-
 .history-grid-wrapper {
   position: absolute;
   top: 150px;
@@ -1003,7 +972,6 @@ body > .special-presentation-container .special-wrapper {
   overflow-x: auto;
 }
 
-/* テーブル基本設定 */
 .history-table {
   width: 100%;
   border-collapse: collapse;
@@ -1030,7 +998,6 @@ body > .special-presentation-container .special-wrapper {
 .col-qty    { width: 10%; text-align: center; }
 .col-price  { width: 15%; text-align: right; }
 
-/* 状態バッジ */
 .status-badge {
   display: inline-block;
   padding: 4px 12px;
@@ -1039,11 +1006,14 @@ body > .special-presentation-container .special-wrapper {
   font-weight: bold;
   color: #fff;
 }
+.status-badge.undelivered {
+  background-color: #7A7A7A;
+}
 .status-badge.cooking {
   background-color: #F07F01;
 }
 .status-badge.delivered {
-  background-color: #7A7A7A;
+  background-color: #2dc99d;
 }
 
 /* 履歴フッター */
@@ -1611,7 +1581,7 @@ body > .special-presentation-container .special-wrapper {
   height: 545px !important;
   width: 400px !important;
   /* 右側カードのレイアウト（left: calc(20% + 162px)）との重なりを調整 */
-  left: calc(20% - 120px) !important; 
+  left: calc(25% - 120px) !important; 
   background: #FFF3D4; /* 画像が無いときや隙間ができたときの下地（お好みで） */
   border-radius: 24px 0 0 24px; /* 左側だけ角丸にして右側カードと結合 */
   overflow: hidden;
@@ -1629,7 +1599,8 @@ body > .special-presentation-container .special-wrapper {
 
 /* 右側コンテンツとの結合をより自然にするため、位置の微調整が必要な場合 */
 .presentation-left-image.non-beer-image + .presentation-right-content {
-  left: calc(20% + 280px) !important; /* 画像の幅に合わせて右側をスライド */
+  width: 600px !important; /* 右側カードの横幅を固定 */
+  left: calc(25% + 280px) !important; /* 画像の幅に合わせて右側をスライド */
 }
 
 /* ==========================================================================

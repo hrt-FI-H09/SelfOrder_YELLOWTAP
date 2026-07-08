@@ -409,15 +409,15 @@ recommendHtml += `
       </div>
     </div>
   `;
-}else {
+} else {
   // ==========================================
   // 【2】ビール以外のカテゴリーのときのレイアウト
   // ==========================================
   presentationContainer.innerHTML = `
-<div class="special-wrapper">
-    <div class="presentation-left-image non-beer-image" onclick="event.stopPropagation();">
-      <img class="clipping-mode-img" src="${product.clippingImage || product.image}" alt="${product.name}" onerror="this.src='./lastAssignment/default.png'">
-    </div>
+    <div class="special-wrapper">
+      <div class="presentation-left-image non-beer-image" onclick="event.stopPropagation();">
+        <img class="clipping-mode-img" src="${product.clippingImage || product.image}" alt="${product.name}" onerror="this.src='./lastAssignment/default.png'">
+      </div>
       
       <div class="presentation-right-content" onclick="event.stopPropagation();">
         <div style="white-space: nowrap; padding-left: 40px; padding-right: 40px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box;">
@@ -425,22 +425,16 @@ recommendHtml += `
           <div style="font-size: 32px; font-weight: bold; color: #000; margin-bottom: 10px; white-space: normal; word-break: break-all;">
             ${product.name}
           </div>
-          <div style="font-size: 32px; color: #333; margin-top: 15px;">
+          <div style="font-size: 32px; color: #E35205; font-weight: 800; font-family: inherit; margin-top: 15px;">
             <span>¥${product.price.toLocaleString()}</span>
-            <span style="font-size: 16px;">(税込)</span>
+            <span style="font-size: 16px; color: #7A7A7A; font-weight: normal;">(税込)</span>
           </div>
 
           <div class="modal-product-description" style="white-space: normal; max-width: 500px; margin-top: 20px;">
             ${product.description || ''}
           </div>
           
-          <div class="recommend-title">おすすめのセットメニュー</div>
-          
-          <div class="recommend-menu">
-            <div class="recommend-card" style="background-image: url('${product.clippingImage || product.image}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
-            <div class="recommend-card" style="background-image: url('${product.clippingImage || product.image}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
           </div>
-        </div>
         
         <div class="frame-order-button" style="width: 100%; display: flex; justify-content: flex-end; align-items: center; gap: 20px; margin-top: auto;">
           <div style="pointer-events: auto; display: flex; align-items: center; height: 60px; background: #fff; border: 2px solid #7A7A7A; border-radius: 8px; overflow: hidden;">
@@ -863,11 +857,14 @@ if (confirmOrderBtn) {
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const timeStr = `${hours}:${minutes}`;
 
-      // カートの中身を履歴配列に移動（初期状態はすべて「調理中」とする）
+      // 1. 今回の注文が配列の何番目から始まるかを正確に記録
+      const startIndex = orderHistory.length;
+
+      // カートの中身を履歴配列に移動
       cart.forEach(item => {
         orderHistory.push({
           time: timeStr,
-          status: 'cooking', // cooking = 調理中, delivered = お届け済
+          status: 'cooking', // 初期状態：調理中
           name: item.name,
           quantity: item.quantity,
           price: item.price * item.quantity
@@ -878,9 +875,31 @@ if (confirmOrderBtn) {
       cart = [];
       updateCartDisplay();
       
-      if (document.getElementById('historyGridWrapper').style.display === 'flex' || document.getElementById('historyGridWrapper').style.display === 'block') {
+      // 2. 履歴画面を即時描画（これがないと、現在の画面が即座に変わりません）
+      const historyWrapper = document.getElementById('historyGridWrapper');
+      const checkoutWrapper = document.getElementById('checkoutGridWrapper');
+
+      if (historyWrapper && (historyWrapper.style.display === 'flex' || historyWrapper.style.display === 'block')) {
         showOrderHistory();
       }
+
+      // 3. 10秒後（10000ミリ秒後）に発火するタイマーを設定
+      setTimeout(() => {
+        // 今回の注文分（startIndex から 現在の配列の最後まで）をループ処理
+        for (let i = startIndex; i < orderHistory.length; i++) {
+          if (orderHistory[i] && orderHistory[i].status === 'cooking') {
+            orderHistory[i].status = 'delivered'; // お届け済に書き換え
+          }
+        }
+
+        // 4. タイマー完了時に開いている画面を強制的に再描画して最新状態にする
+        if (historyWrapper && (historyWrapper.style.display === 'flex' || historyWrapper.style.display === 'block')) {
+          showOrderHistory(); // 履歴バッジを調理中からお届け済へ切り替え
+        }
+        if (checkoutWrapper && (checkoutWrapper.style.display === 'flex' || checkoutWrapper.style.display === 'block')) {
+          showCheckoutSection();
+        }
+      }, 10000); // 10秒
     }
   });
 }
@@ -1008,10 +1027,7 @@ function executeFinalCheckout() {
 function showOrderHistory() {
   const menuWrapper = document.getElementById('menuGridWrapper');
   const historyWrapper = document.getElementById('historyGridWrapper');
-  
-  // サービス画面のラッパー要素を取得
   const serviceWrapper = document.getElementById('serviceGridWrapper');
-  
   const tableBody = document.getElementById('historyTableBody');
   const totalPriceLabel = document.getElementById('historyTotalPrice');
   
@@ -1027,11 +1043,9 @@ function showOrderHistory() {
   if (nextBtn) nextBtn.style.setProperty('display', 'none', 'important');
   if (beforeBtn) beforeBtn.style.setProperty('display', 'none', 'important');
 
-  // 3. メニューとサービス画面を「両方とも非表示」にし、履歴エリアを表示する
+  // 3. 他の画面を非表示にし、履歴エリアを表示する
   menuWrapper.style.setProperty('display', 'none', 'important');
-  if (serviceWrapper) {
-    serviceWrapper.style.setProperty('display', 'none', 'important');
-  }
+  if (serviceWrapper) serviceWrapper.style.setProperty('display', 'none', 'important');
   historyWrapper.style.setProperty('display', 'block', 'important');
 
   // 4. テーブルの中身を一度リセット
@@ -1049,8 +1063,21 @@ function showOrderHistory() {
     grandTotal += item.price;
     const tr = document.createElement('tr');
     
-    const statusClass = item.status === 'cooking' ? 'cooking' : item.status === 'delivered' ? 'delivered' : 'unarrived';
-    const statusText = item.status === 'cooking' ? '調理中' : item.status === 'delivered' ? 'お届け済' : '未到着';
+    // 文字列のブレを完全に防ぐための厳密な条件分岐
+    let statusClass = 'unarrived';
+    let statusText = '未到着';
+
+    if (item.status === 'cooking') {
+      statusClass = 'cooking';
+      statusText = '調理中';
+    } else if (item.status === 'delivered') {
+      statusClass = 'delivered';
+      statusText = 'お届け済';
+    } else {
+      // unarrived、またはその他の予期せぬ文字列はすべて「未到着」に集約
+      statusClass = 'unarrived';
+      statusText = '未到着';
+    }
 
     tr.innerHTML = `
       <td class="col-time">${item.time}</td>
@@ -1117,11 +1144,16 @@ function changeServiceQuantity(idKey, amount, event) {
   qtyElement.textContent = targetQty;
 }
 
+/* ==========================================
+ * アメニティ（サービス要請）注文送信処理（安全ガード版）
+ * ==========================================
+ */
 function requestService(idKey, displayName) {
   if (isCheckoutConfirmed) {
     alert('すでにお会計が確定しているため、サービス要請は利用できません。');
     return;
   }
+  
   const qtyElement = document.getElementById(`serviceQty_${idKey}`);
   if (!qtyElement) return;
 
@@ -1135,16 +1167,41 @@ function requestService(idKey, displayName) {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const timeStr = `${hours}:${minutes}`;
 
-    orderHistory.push({
+    // ★ 1. データを追加する「前」ではなく、追加したオブジェクトそのものを直接変数に参照させる
+    // これにより、他の非同期処理や注文とインデックス番号がズレるバグを100%防ぎます
+    const newAmenityItem = {
       time: timeStr,
-      status: 'unarrived',
+      status: 'unarrived', // 確実に初期値を unarrived に設定
       name: displayName,
       quantity: selectedQty,
       price: 0 
-    });
+    };
+
+    // 履歴配列に追加
+    orderHistory.push(newAmenityItem);
 
     alert(`${displayName} × ${selectedQty}個 の注文を送信しました。しばらくお待ちください。`);
     
+    // ★ 2. 開いている画面をチェックして安全に再描画する
+    const historyWrapper = document.getElementById('historyGridWrapper');
+    if (historyWrapper && (historyWrapper.style.display === 'flex' || historyWrapper.style.display === 'block')) {
+      showOrderHistory(); 
+    }
+
+    // ★ 3. 10秒後（10000ms）にステータスを更新するタイマー
+    setTimeout(() => {
+      // インデックス番号ではなく、先ほど作成したオブジェクトの参照を直接書き換える
+      if (newAmenityItem) {
+        newAmenityItem.status = 'delivered'; 
+      }
+
+      // タイマー完了時に履歴画面が開いていれば安全に再描画
+      if (historyWrapper && (historyWrapper.style.display === 'flex' || historyWrapper.style.display === 'block')) {
+        showOrderHistory(); 
+      }
+    }, 10000); // 10秒
+
+    // ビールカテゴリーのタブに戻す
     const beerTab = document.querySelector('header.tab-bar button.tab-btn-beer');
     if (beerTab) {
       beerTab.click(); 
