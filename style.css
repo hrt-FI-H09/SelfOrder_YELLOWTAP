@@ -1032,7 +1032,7 @@ body > .special-presentation-container .special-wrapper {
 }
 
 /* ==========================================================================
-   12. サービス（アメニティ要請）セクション
+   12. サービス要請セクション
    ========================================================================== */
 .service-grid-wrapper {
   position: absolute;
@@ -1083,7 +1083,7 @@ body > .special-presentation-container .special-wrapper {
   border-radius: 12px;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.15);
   padding: 24px;
-  height: 260px; /* カウンターが入るため少し高くします */
+  height: 260px; 
 }
 
 .service-item-name {
@@ -1149,14 +1149,13 @@ body > .special-presentation-container .special-wrapper {
 
 /* モーダルカード（詳細画面）内専用の商品説明文スタイル */
 .modal-product-description {
-  font-size: 15px;          /* モーダルは大きいので文字も少し大きめの20pxに設定 */
-  color: #777777;           /* ★グレーっぽい文字色 */
-  line-height: 1.5;         /* ゆったりとした行間 */
-  margin-top: 10px;         /* 上の要素との隙間 */
-  text-align: left;         /* 左詰めで読みやすく */
+  font-size: 15px;
+  color: #777777;
+  line-height: 1.5;
+  margin-top: 10px;
+  text-align: left;
 }
 
-/* 通常モーダルのときは中央寄せにするための微調整 */
 #modalContent .modal-product-description {
   text-align: center;
 }
@@ -1232,7 +1231,6 @@ body > .special-presentation-container .special-wrapper {
   font-weight: bold;
 }
 
-/* 列の幅指定 */
 .checkout-col-name     { width: 60%; }
 .checkout-col-qty      { width: 15%; text-align: center; }
 .checkout-col-subtotal { width: 25%; text-align: right; }
@@ -1332,23 +1330,21 @@ body > .special-presentation-container .special-wrapper {
 }
 
 /* ==========================================================================
-   14. 甘口・辛口テイストスライダー（はみ出し対策版）
+   14. 甘口・辛口テイストスライダー
    ========================================================================== */
 
 .taste-slider-container {
   position: relative;
-  width: 240px;            /* 左右の文字が綺麗に収まるように少し幅を広げます */
+  width: 240px;      
   height: 35px;            
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
 }
 
-/* ★新設：ポインターが動く基準線を、バーの横幅（文字の内側）と完全に同期させる */
 .taste-pointer-area {
   position: absolute;
   top: 4px;
-  /* 左右のラベル（辛口・甘口）の文字幅分、内側に狭めて可動範囲をロックする */
   left: 36px;  
   right: 36px; 
   height: 14px;
@@ -1360,7 +1356,6 @@ body > .special-presentation-container .special-wrapper {
   top: 0;
   font-size: 14px;
   color: #E35205;          
-  /* 💡 centerを基準にして左右に動かすことで、0%でも100%でも絶対にバーの端でピタッと止まります */
   transform: translateX(-50%); 
   transition: left 0.5s cubic-bezier(0.25, 1, 0.5, 1);  
   line-height: 1;
@@ -1380,7 +1375,7 @@ body > .special-presentation-container .special-wrapper {
   font-weight: 800;
   color: #7A7A7A;
   user-select: none;
-  width: 32px;             /* 文字幅を固定して計算を安定させます */
+  width: 32px;
   text-align: center;
 }
 
@@ -1391,36 +1386,31 @@ body > .special-presentation-container .special-wrapper {
   background: #FFF3D4;     
   border: 2px solid #FFBE0B; 
   border-radius: 10px;     
-  margin: 0 4px;           /* 文字との間にわずかな隙間 */
+  margin: 0 4px; 
 }
 
 
 /* ==========================================================================
-   15. Figma同期：beer-specs フレーム（バッジ＆スライダー横並びコンテナ）
+   15. beer-specs
    ========================================================================== */
 
 .beer-specs {
   display: flex !important;
-  flex-direction: row !important; /* 強制的に横並び */
-  align-items: center !important;  /* 縦のセンターを綺麗に揃える */
-  gap: 30px !important;           /* バッジとスライダーの間の余白 */
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 30px !important; 
   width: 100% !important;
   margin-top: 12px;
   margin-bottom: 16px;
-  
-  /* --------------------------------------------------
-     ★重要：親からの nowrap（改行禁止）の呪いをここで解く
-     -------------------------------------------------- */
   white-space: normal !important; 
 }
 
-/* 演出モーダル内：アルコール度数のカジュアルバッジスタイル */
 .modal-product-alcohol {
   display: inline-flex !important;
   align-items: center;
   width: max-content !important;
-  flex-shrink: 0;                 /* スライダーに押されてバッジが縮むのを防ぐ */
-  margin: 0 !important;           /* 予期せぬズレを防ぐためマージンは0 */
+  flex-shrink: 0; 
+  margin: 0 !important; 
   
   font-size: 16px;
   font-weight: 800;            
@@ -1433,10 +1423,8 @@ body > .special-presentation-container .special-wrapper {
 }
 
 /* ==========================================================================
-   16. Figma同期：recommend-menu フレーム（余白自動埋め尽くし版）
+   16. recommend-menu フレーム
    ========================================================================== */
-
-/* おすすめカード2枚を横並びにするコンテナ */
 .recommend-menu {
   display: flex !important;
   flex-direction: row !important; 
@@ -1454,8 +1442,7 @@ body > .special-presentation-container .special-wrapper {
 /* おすすめメニューカード本体 */
 .recommend-card {
   flex: 1;
-  height: auto !important;       /* 高さは親（recommend-menu）に完全追従させる */
-  
+  height: auto !important;
   background-color: #FFF3D4;     
   border: 2px dashed #FFBE0B;     
   border-radius: 12px;           
@@ -1464,30 +1451,27 @@ body > .special-presentation-container .special-wrapper {
   transition: transform 0.1s, background-color 0.1s;
 }
 
-
-/* クリックした瞬間（アクティブ時）に少し縮む演出 */
 .recommend-card:active {
   transform: scale(0.98);
 }
 
 /* ==========================================================================
-   17. recommend-menu の見出しスタイル
+   17. recommend-menu の見出し
    ========================================================================== */
-
 .recommend-title {
-  font-size: 16px;           /* 小さすぎず、パッと目に入るサイズ */
-  font-weight: 800;          /* アルコールバッジなどと合わせた太文字でポップに */
-  color: #333333;            /* 読みやすい濃いめのグレー */
-  margin-top: 20px;          /* 説明文との間の余白 */
-  margin-bottom: 8px;        /* 下のおすすめカードとの間の余白 */
-  text-align: left;          /* 左寄せ */
+  font-size: 16px;
+  font-weight: 800; 
+  color: #333333; 
+  margin-top: 20px;
+  margin-bottom: 8px;
+  text-align: left;
   width: 100%;
-  max-width: 500px;          /* 全体の横幅と同期 */
+  max-width: 500px; 
   letter-spacing: 0.5px;
 }
 
 /* ==========================================================================
-   19. Figma同期：normal-menu フレーム（clippingImage 連動版）
+   19. normal-menu フレーム
    ========================================================================== */
 
 /* カードを縦に並べるコンテナ */
@@ -1508,29 +1492,24 @@ body > .special-presentation-container .special-wrapper {
   flex-direction: row !important;
   align-items: center !important;
   width: 100%;
-  height: 85px;                      /* カード全体の高さ */
-  background-color: #FFF3D4;         /* カジュアルな薄黄色 */
-  border: 2px dashed #FFBE0B;         /* ポップな黄色の点線枠 */
-  border-radius: 12px;               /* 角丸 */
-  overflow: hidden;                  /* 中の画像が角丸からはみ出すのを防ぐ */
-  cursor: pointer;                   /* 指マーク */
+  height: 85px;
+  background-color: #FFF3D4;
+  border: 2px dashed #FFBE0B;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer; 
   transition: transform 0.1s, background-color 0.1s;
 }
 
 /* 左側の写真埋め込みエリア */
 .normal-menu-thumb {
-  width: 85px;                       /* 高さと合わせて 1:1 の正方形枠を作る */
+  width: 85px;
   height: 100%;
-  
-  /* --------------------------------------------------
-     ★clippingImage を綺麗に収める設定
-     -------------------------------------------------- */
-  background-size: cover;            /* 縦横比を保ったまま枠いっぱいに拡大縮小 */
-  background-position: center;       /* 画像の中心を真ん中に合わせる */
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  
-  flex-shrink: 0;                    /* テキスト量に押されて画像が潰れるのを防ぐ */
-  border-right: 2px dashed #FFBE0B;  /* 中央の区切り点線 */
+  flex-shrink: 0; 
+  border-right: 2px dashed #FFBE0B; 
 }
 
 /* 右側のテキスト情報エリア */
@@ -1559,10 +1538,6 @@ body > .special-presentation-container .special-wrapper {
   color: #E35205;
 }
 
-/* インタラクション */
-.normal-menu-card:hover {
-  background-color: #FFEAA7;
-}
 .normal-menu-card:active {
   transform: scale(0.99);
 }
@@ -1571,7 +1546,6 @@ body > .special-presentation-container .special-wrapper {
   width: 100% !important;
   height: 100% !important;
   
-  /* 縦横比を維持したまま、左側の枠に合わせて綺麗に中央でトリミングします */
   object-fit: cover !important; 
   object-position: center !important;
 }
@@ -1580,10 +1554,9 @@ body > .special-presentation-container .special-wrapper {
   top: calc(50% - 2px);
   height: 545px !important;
   width: 400px !important;
-  /* 右側カードのレイアウト（left: calc(20% + 162px)）との重なりを調整 */
   left: calc(25% - 120px) !important; 
-  background: #FFF3D4; /* 画像が無いときや隙間ができたときの下地（お好みで） */
-  border-radius: 24px 0 0 24px; /* 左側だけ角丸にして右側カードと結合 */
+  background: #FFF3D4;
+  border-radius: 24px 0 0 24px; 
   overflow: hidden;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
@@ -1594,38 +1567,34 @@ body > .special-presentation-container .special-wrapper {
   height: 100% !important;
   object-fit: cover !important;
   object-position: center !important;
-  filter: none !important; /* 外枠で影をつけるため、画像自体のドロップシャドウをリセット */
+  filter: none !important;
 }
 
-/* 右側コンテンツとの結合をより自然にするため、位置の微調整が必要な場合 */
 .presentation-left-image.non-beer-image + .presentation-right-content {
-  width: 600px !important; /* 右側カードの横幅を固定 */
-  left: calc(25% + 280px) !important; /* 画像の幅に合わせて右側をスライド */
+  width: 600px !important;
+  left: calc(25% + 280px) !important; 
 }
 
 /* ==========================================================================
-   おすすめセットメニュー：連動アニメーションレイアウト
+   おすすめセットメニュー
    ========================================================================== */
 
-/* 1. 元のビールモーダル（.special-wrapper）の初期化と左シフト */
 .special-wrapper {
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
 }
 
-/* セットメニュー選択時に左側へスッと寄るスタイル */
 .special-wrapper.slide-left-active {
-  transform: translateX(-240px) !important; /* 左側にスライド */
+  transform: translateX(-240px) !important;
 }
 
 /* 2. 右側から下からフロートインしてくるセットメニュー外枠 */
 /* ==========================================================================
-   セットメニューミニカード：画像表示修正＆コンパクトレイアウト
+   セットメニューミニカード
    ========================================================================== */
 
-/* パネル全体のサイズ調整（縦幅をスマートに縮小） */
 .set-menu-float-panel {
   position: absolute;
-  top: 185px; /* ビールのボタン群と高さを揃える */
+  top: 185px;
   left: calc(20% + 720px);
   width: 300px;
   height: 430px; 
@@ -1641,30 +1610,30 @@ body > .special-presentation-container .special-wrapper {
   opacity: 1;
 }
 
-/* 黄色い枠線を持つ、白ベースのミニ台紙カード */
+/* ミニカード */
 .set-menu-placeholder-card {
   width: 100%;
   height: 100%;
   background: #FFFFFF;
   border-radius: 20px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  border: 3px solid #FFBE0B; /* 外枠の黄色い線は残す */
+  border: 3px solid #FFBE0B;
   padding: 16px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
 }
 
-/* ★ 商品画像表示エリア（消失バグを修正） */
+/* 商品画像表示エリア */
 .set-menu-compact-thumb {
   width: 100% !important;
-  height: 140px !important; /* 縦幅のサイズを固定して領域を確保 */
+  height: 140px !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
   border-radius: 12px;
   margin-bottom: 8px;
-  display: block !important; /* 確実に要素を描画させる */
+  display: block !important;
 }
 
 /* テキスト情報エリア */
@@ -1701,7 +1670,6 @@ body > .special-presentation-container .special-wrapper {
    セットメニューミニカード：縦並び画像・テキストレイアウト
    ========================================================================== */
 
-/* 外枠の長方形ボックス（高さを280pxに微調整） */
 .set-menu-detail-box {
   width: 100%;
   height: 280px;
@@ -1709,8 +1677,8 @@ body > .special-presentation-container .special-wrapper {
   border: 2px solid #FFBE0B;
   border-radius: 16px;
   display: flex;
-  flex-direction: column; /* 縦並び */
-  overflow: hidden; /* 画像の角丸はみ出しを防止 */
+  flex-direction: column;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -1721,7 +1689,7 @@ body > .special-presentation-container .special-wrapper {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-bottom: 2px dashed #FFBE0B; /* 画像と文字の境界線 */
+  border-bottom: 2px dashed #FFBE0B;
   flex-shrink: 0;
 }
 
@@ -1732,7 +1700,7 @@ body > .special-presentation-container .special-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: #ffffff; /* 文字背景を白にして読みやすく（お好みで#FFF3D4のままでもOK） */
+  background: #ffffff;
 }
 
 /* 商品名 */
@@ -1755,4 +1723,54 @@ body > .special-presentation-container .special-wrapper {
   font-weight: 800;
   color: #E35205;
   margin: 0;
+}
+
+/* ==========================================================================
+   メインコンテンツ背景：炭酸アニメーション
+   ========================================================================== */
+.main-content {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 泡の要素全体のコンテナ */
+.bubbles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; 
+  z-index: 0;
+}
+
+/* 泡単体のスタイル */
+.bubble {
+  position: absolute;
+  bottom: -20px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(240, 127, 1, 0.8);
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: bubbleUp linear forwards;
+}
+
+/* 下から上へ昇っていくアニメーション */
+@keyframes bubbleUp {
+  0% {
+    transform: translateY(0) scale(0.3);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1; /* スッと現れる */
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    /* 画面の一番上まで昇らせる */
+    transform: translateY(-105vh) scale(1);
+    opacity: 0; /* 上に着いたら完全に消える */
+  }
 }

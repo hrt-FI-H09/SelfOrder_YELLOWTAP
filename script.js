@@ -484,7 +484,7 @@ function addDirectFromAnimation(productId, event) {
   }
 
   updateCartDisplay();
-// ★ ここを修正：セットメニューのパネルが開いているときは、全体を閉じずに右パネルだけを消す
+// セットメニューのパネルが開いているときは、全体を閉じずに右パネルだけを消す
   const panel = document.getElementById('setMenuFloatPanel');
   if (panel) {
     // アニメーション付きで右パネルを片方だけ消し、ビールを元の位置に戻す
@@ -718,7 +718,6 @@ if (checkBtn) {
   });
 }
 
-// 2. 既存の「他の通常タブが押されたときに隠す」処理を拡張し、会計画面用のID（checkoutWrapper）も非表示にするよう連動させます
 const allCategoryTabsExtended = document.querySelectorAll('header.tab-bar button');
 allCategoryTabsExtended.forEach(tab => {
   tab.addEventListener('click', () => {
@@ -875,7 +874,7 @@ if (confirmOrderBtn) {
       cart = [];
       updateCartDisplay();
       
-      // 2. 履歴画面を即時描画（これがないと、現在の画面が即座に変わりません）
+      // 2. 履歴画面を即時描画
       const historyWrapper = document.getElementById('historyGridWrapper');
       const checkoutWrapper = document.getElementById('checkoutGridWrapper');
 
@@ -883,7 +882,7 @@ if (confirmOrderBtn) {
         showOrderHistory();
       }
 
-      // 3. 10秒後（10000ミリ秒後）に発火するタイマーを設定
+      // 3. 10秒後に発火するタイマーを設定
       setTimeout(() => {
         // 今回の注文分（startIndex から 現在の配列の最後まで）をループ処理
         for (let i = startIndex; i < orderHistory.length; i++) {
@@ -944,7 +943,7 @@ function playFlyToCartAnimation(event) {
 
 /**
  * ==========================================
- * ★新設：会計確認画面の表示と明細集計
+ * 会計確認画面の表示と明細集計
  * ==========================================
  */
 function showCheckoutSection() {
@@ -984,8 +983,7 @@ function showCheckoutSection() {
 
   let grandTotal = 0;
 
-  // 5. 履歴データ(orderHistory)をループして、同じ商品を合計してきれいに見せる（またはそのまま明細にする）
-  // 運用の分かりやすさのため、今回は注文ごとの明細をそのまま並べます
+  // 5. 履歴データ(orderHistory)をループして、同じ商品を合計
   orderHistory.forEach(item => {
     grandTotal += item.price;
     const tr = document.createElement('tr');
@@ -1063,7 +1061,6 @@ function showOrderHistory() {
     grandTotal += item.price;
     const tr = document.createElement('tr');
     
-    // 文字列のブレを完全に防ぐための厳密な条件分岐
     let statusClass = 'unarrived';
     let statusText = '未到着';
 
@@ -1074,7 +1071,6 @@ function showOrderHistory() {
       statusClass = 'delivered';
       statusText = 'お届け済';
     } else {
-      // unarrived、またはその他の予期せぬ文字列はすべて「未到着」に集約
       statusClass = 'unarrived';
       statusText = '未到着';
     }
@@ -1095,7 +1091,7 @@ function showOrderHistory() {
 
 /**
  * ==========================================
- * サービス（アメニティ）画面の表示と個数制御ロジック
+ * サービス画面の表示と個数制御ロジック
  * ==========================================
  */
 function showServiceSection() {
@@ -1145,7 +1141,7 @@ function changeServiceQuantity(idKey, amount, event) {
 }
 
 /* ==========================================
- * アメニティ（サービス要請）注文送信処理（安全ガード版）
+ * サービス要請注文送信処理
  * ==========================================
  */
 function requestService(idKey, displayName) {
@@ -1166,12 +1162,9 @@ function requestService(idKey, displayName) {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const timeStr = `${hours}:${minutes}`;
-
-    // ★ 1. データを追加する「前」ではなく、追加したオブジェクトそのものを直接変数に参照させる
-    // これにより、他の非同期処理や注文とインデックス番号がズレるバグを100%防ぎます
     const newAmenityItem = {
       time: timeStr,
-      status: 'unarrived', // 確実に初期値を unarrived に設定
+      status: 'unarrived', // 初期値unarrived
       name: displayName,
       quantity: selectedQty,
       price: 0 
@@ -1182,20 +1175,19 @@ function requestService(idKey, displayName) {
 
     alert(`${displayName} × ${selectedQty}個 の注文を送信しました。しばらくお待ちください。`);
     
-    // ★ 2. 開いている画面をチェックして安全に再描画する
+    // 開いている画面をチェックして再描画する
     const historyWrapper = document.getElementById('historyGridWrapper');
     if (historyWrapper && (historyWrapper.style.display === 'flex' || historyWrapper.style.display === 'block')) {
       showOrderHistory(); 
     }
 
-    // ★ 3. 10秒後（10000ms）にステータスを更新するタイマー
+    // 10秒後にステータスを更新するタイマー(テスト用)
     setTimeout(() => {
-      // インデックス番号ではなく、先ほど作成したオブジェクトの参照を直接書き換える
       if (newAmenityItem) {
         newAmenityItem.status = 'delivered'; 
       }
 
-      // タイマー完了時に履歴画面が開いていれば安全に再描画
+      // タイマー完了時に履歴画面が開いていれば再描画
       if (historyWrapper && (historyWrapper.style.display === 'flex' || historyWrapper.style.display === 'block')) {
         showOrderHistory(); 
       }
@@ -1208,7 +1200,7 @@ function requestService(idKey, displayName) {
     }
   }
 }
-// ★追記：店員呼び出しボタンのクリックイベント
+// 店員呼び出しボタンのクリックイベント
 const callBtn = document.querySelector('.btn-call');
 if (callBtn) {
   callBtn.addEventListener('click', (event) => {
@@ -1227,25 +1219,22 @@ function showSetMenuPanel(productId) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
 
-  // 1. 元のビールモーダルに左スライド用のクラスを付与
+  // 元のビールモーダルに左スライド用のクラスを付与
   const specialWrapper = document.querySelector('.special-wrapper');
   if (specialWrapper) {
     specialWrapper.classList.add('slide-left-active');
   }
 
-  // 2. すでにパネルが存在していれば一旦削除
+  // 既にパネルが存在していれば一旦削除
   const existingPanel = document.getElementById('setMenuFloatPanel');
   if (existingPanel) {
     existingPanel.remove();
   }
 
-  // 3. セットメニュー用のコンテナを生成
   const panel = document.createElement('div');
   panel.id = 'setMenuFloatPanel';
   panel.className = 'set-menu-float-panel';
   panel.onclick = function(e) { e.stopPropagation(); };
-
-  // 4. 内部構造（画像とテキストをダイレクトに配置、画像参照を保証）
   panel.innerHTML = `
     <div class="set-menu-placeholder-card">
       <div style="font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #333; text-align: center; border-bottom: 2px dashed #FFBE0B; padding-bottom: 6px;">
@@ -1278,3 +1267,56 @@ function showSetMenuPanel(productId) {
     panel.classList.add('float-in-active');
   }, 50);
 }
+
+/**
+ * ==========================================
+ * 背景の炭酸泡アニメーション自動生成機能
+ * ==========================================
+ */
+function initBackgroundBubbles() {
+  const mainContent = document.querySelector('.main-content');
+  if (!mainContent) return;
+
+  const bubblesContainer = document.createElement('div');
+  bubblesContainer.className = 'bubbles-container';
+  mainContent.insertBefore(bubblesContainer, mainContent.firstChild);
+
+  // 泡生成関数
+  function createBubble() {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+
+    // 泡のサイズ
+    const size = Math.random() * 15 + 4;
+    bubble.style.width = `${size}px`;
+    bubble.style.height = `${size}px`;
+
+    // 泡が発生する横位置を
+    bubble.style.left = `${Math.random() * 100}%`;
+
+    // 上昇スピード
+    const duration = Math.random() * 7 + 4;
+    bubble.style.animationDuration = `${duration}s`;
+
+    const drift = (Math.random() - 0.5) * 30;
+    bubble.style.setProperty('--drift-x', `${drift}px`);
+
+    bubblesContainer.appendChild(bubble);
+
+    setTimeout(() => {
+      bubble.remove();
+    }, duration * 1000);
+  }
+
+  for (let i = 0; i < 50; i++) {
+    setTimeout(createBubble, Math.random() * 5000);
+  }
+
+  setInterval(createBubble, 30);
+}
+
+// 既存の DOMContentLoaded イベント等に登録して起動させる
+document.addEventListener('DOMContentLoaded', () => {
+  // 他の初期化処理（setupTabEvents, displayMenusなど）の並びに追加してください
+  initBackgroundBubbles();
+});
